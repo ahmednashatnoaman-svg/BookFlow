@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 Book Exchange — Full Project Cycle</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root {
+  --bg: #0f1117;
+  --bg2: #1a1d27;
+  --bg3: #22263a;
+  --card: #1e2235;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #e8e9f0;
+  --muted: #8b8fa8;
+  --accent: #6c7eff;
+  --accent2: #a78bfa;
+  --teal: #2dd4bf;
+  --coral: #fb7185;
+  --amber: #fbbf24;
+  --green: #4ade80;
+  --blue: #60a5fa;
+  --purple: #c084fc;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+
+/* HEADER */
+.header { background: linear-gradient(135deg, #1a1d35 0%, #0f1117 100%); border-bottom: 1px solid var(--border); padding: 2rem 2.5rem; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+.header h1 { font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, var(--accent), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header p { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+
+/* NAV TABS */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 0 2.5rem; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.tab { padding: 0.75rem 1.1rem; font-size: 0.82rem; font-weight: 500; color: var(--muted); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* MAIN */
+.main { max-width: 1100px; margin: 0 auto; padding: 2rem 2.5rem; }
+.section { display: none; animation: fadeIn 0.3s; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+.card p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+
+/* SECTION HEADER */
+.sec-header { margin-bottom: 2rem; }
+.sec-header h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.4rem; }
+.sec-header p { color: var(--muted); font-size: 0.9rem; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.badge-blue { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+.badge-teal { background: rgba(45,212,191,0.15); color: var(--teal); border: 1px solid rgba(45,212,191,0.3); }
+.badge-purple { background: rgba(192,132,252,0.15); color: var(--purple); border: 1px solid rgba(192,132,252,0.3); }
+.badge-amber { background: rgba(251,191,36,0.15); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+.badge-coral { background: rgba(251,113,133,0.15); color: var(--coral); border: 1px solid rgba(251,113,133,0.3); }
+.badge-green { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+
+/* TOOL CARD */
+.tool-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; display: flex; gap: 12px; align-items: flex-start; }
+.tool-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.tool-info h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 2px; }
+.tool-info p { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+.tool-info .mcp { font-size: 0.75rem; color: var(--teal); font-family: monospace; background: rgba(45,212,191,0.08); padding: 2px 7px; border-radius: 4px; }
+
+/* STEP TIMELINE */
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: var(--border2); }
+.step { position: relative; margin-bottom: 1.75rem; }
+.step-dot { position: absolute; left: -2rem; top: 4px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; z-index: 1; }
+.step-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.step-desc { color: var(--muted); font-size: 0.88rem; }
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { text-align: left; padding: 0.6rem 0.9rem; background: var(--bg3); color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+td { padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.tbl-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; overflow-x: auto; }
+
+/* CODE */
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; font-size: 0.82rem; }
+pre { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.82rem; line-height: 1.7; margin: 0.75rem 0; }
+.inline-code { background: rgba(108,126,255,0.12); color: var(--accent); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.82em; }
+
+/* ERD */
+.erd-entity { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; overflow: hidden; min-width: 180px; }
+.erd-entity-header { padding: 0.5rem 0.85rem; font-weight: 700; font-size: 0.85rem; background: rgba(108,126,255,0.15); color: var(--accent); border-bottom: 1px solid var(--border2); }
+.erd-entity-field { padding: 0.35rem 0.85rem; font-size: 0.78rem; color: var(--muted); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem; }
+.erd-entity-field:last-child { border-bottom: none; }
+.erd-entity-field .pk { color: var(--amber); font-size: 0.7rem; font-weight: 700; }
+.erd-entity-field .fk { color: var(--coral); font-size: 0.7rem; font-weight: 700; }
+.erd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
+
+/* WIREFRAME */
+.wireframe { background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; overflow: hidden; }
+.wf-bar { background: var(--bg2); padding: 0.5rem 1rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+.wf-dot { width: 8px; height: 8px; border-radius: 50%; }
+.wf-nav { background: rgba(108,126,255,0.1); padding: 0.6rem 1rem; display: flex; gap: 1rem; border-bottom: 1px solid var(--border); font-size: 0.78rem; }
+.wf-nav span { color: var(--muted); cursor: pointer; }
+.wf-nav span.active { color: var(--accent); font-weight: 600; }
+.wf-body { padding: 1rem; }
+.wf-hero { background: linear-gradient(135deg, rgba(108,126,255,0.15), rgba(45,212,191,0.1)); border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1rem; }
+.wf-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.wf-book { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem; }
+.wf-book-img { background: var(--border2); border-radius: 4px; height: 60px; margin-bottom: 6px; }
+.wf-book-title { font-size: 0.72rem; font-weight: 600; margin-bottom: 2px; }
+.wf-book-sub { font-size: 0.68rem; color: var(--muted); }
+.wf-search { background: var(--bg2); border: 1px solid var(--border2); border-radius: 6px; padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 6px; margin-bottom: 1rem; font-size: 0.8rem; color: var(--muted); }
+
+/* SPRINT */
+.sprint { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 1rem; overflow: hidden; }
+.sprint-header { padding: 0.75rem 1.25rem; background: var(--bg3); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); cursor: pointer; }
+.sprint-header h4 { font-size: 0.9rem; font-weight: 600; }
+.sprint-body { padding: 1rem 1.25rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.story { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.78rem; color: var(--muted); display: flex; gap: 6px; align-items: flex-start; }
+.story i { color: var(--accent); margin-top: 1px; flex-shrink: 0; }
+.pts { font-size: 0.7rem; font-weight: 700; padding: 1px 7px; border-radius: 10px; background: rgba(108,126,255,0.15); color: var(--accent); margin-left: auto; flex-shrink: 0; }
+
+/* API */
+.endpoint { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.75rem; overflow: hidden; }
+.ep-header { padding: 0.6rem 1rem; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.method { padding: 2px 9px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; font-family: monospace; }
+.GET { background: rgba(74,222,128,0.15); color: var(--green); }
+.POST { background: rgba(96,165,250,0.15); color: var(--blue); }
+.PUT { background: rgba(251,191,36,0.15); color: var(--amber); }
+.DELETE { background: rgba(251,113,133,0.15); color: var(--coral); }
+.PATCH { background: rgba(192,132,252,0.15); color: var(--purple); }
+.ep-path { font-family: monospace; font-size: 0.85rem; color: var(--text); }
+.ep-desc { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+.ep-body { padding: 0 1rem 0.75rem; display: none; }
+.ep-body.open { display: block; }
+
+/* PROGRESS BAR */
+.progress-wrap { background: var(--border); border-radius: 99px; height: 6px; overflow: hidden; margin-top: 8px; }
+.progress-bar { height: 100%; border-radius: 99px; transition: width 0.5s; }
+
+/* VISION */
+.vision-pillar { border-left: 3px solid; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; background: var(--bg3); margin-bottom: 0.75rem; }
+ul.checklist { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 0.75rem; }
+ul.checklist li { font-size: 0.83rem; color: var(--muted); display: flex; gap: 6px; align-items: flex-start; }
+ul.checklist li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+
+/* USER STORIES */
+.story-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1.1rem; margin-bottom: 0.65rem; }
+.story-card .as { font-size: 0.78rem; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+.story-card .want { font-size: 0.87rem; font-weight: 500; }
+.story-card .so { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+.story-card .acceptance { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.story-card .acceptance span { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+.ac-item { font-size: 0.78rem; color: var(--muted); margin-top: 3px; display: flex; gap: 5px; }
+.ac-item::before { content: '→'; color: var(--border2); }
+
+/* DIVIDER */
+.divider { border: none; border-top: 1px solid var(--border); margin: 1.75rem 0; }
+
+/* FLOATING LEGEND */
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+@media (max-width: 700px) {
+  .header, .tabs { padding-left: 1rem; padding-right: 1rem; }
+  .main { padding: 1.25rem 1rem; }
+  .sprint-body { grid-template-columns: 1fr; }
+  ul.checklist { grid-template-columns: 1fr; }
+  .wf-grid3 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📚 Peer-to-Peer Book Exchange System</h1>
+  <p>Complete Project Lifecycle — Vision → MVP &nbsp;·&nbsp; Expert Guide with Free AI Tools & MCP Servers</p>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" onclick="show('vision',this)"><i class="ti ti-eye"></i> Vision</button>
+  <button class="tab" onclick="show('requirements',this)"><i class="ti ti-list-check"></i> Requirements</button>
+  <button class="tab" onclick="show('stories',this)"><i class="ti ti-users"></i> User Stories</button>
+  <button class="tab" onclick="show('usecase',this)"><i class="ti ti-arrows-right-left"></i> Use Case</button>
+  <button class="tab" onclick="show('erd',this)"><i class="ti ti-database"></i> ERD</button>
+  <button class="tab" onclick="show('api',this)"><i class="ti ti-api"></i> API Docs</button>
+  <button class="tab" onclick="show('wireframes',this)"><i class="ti ti-layout"></i> Wireframes</button>
+  <button class="tab" onclick="show('sprint',this)"><i class="ti ti-calendar-time"></i> Sprint Plan</button>
+  <button class="tab" onclick="show('mvp',this)"><i class="ti ti-rocket"></i> MVP & Tools</button>
+</div>
+
+<div class="main">
+
+<!-- ===================== VISION ===================== -->
+<div class="section active" id="vision">
+  <div class="sec-header">
+    <span class="badge badge-purple">📖 Phase 1</span>
+    <h2 style="margin-top:8px">Vision Document</h2>
+    <p>Strategic overview — what are we building, why, and for whom.</p>
+  </div>
+
+  <div class="card">
+    <h3><i class="ti ti-target" style="color:var(--accent)"></i> Problem Statement</h3>
+    <p>Used books accumulate in homes while students and readers pay full price for books they need. There is no simple, trust-based, Arabic/English platform in the MENA region that allows people to exchange or sell used books peer-to-peer without complex payment rails or a real-time chat requirement.</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3><i class="ti ti-bulb" style="color:var(--amber)"></i> Vision Statement</h3>
+      <p>Build the simplest, safest marketplace for used books in the Arab world — where any reader can list, discover, and swap books with zero friction and no payment infrastructure.</p>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-trending-up" style="color:var(--teal)"></i> Success Metrics</h3>
+      <ul class="checklist" style="grid-template-columns:1fr">
+        <li>500 listings in first 3 months</li>
+        <li>200 completed exchanges / sales</li>
+        <li>40% monthly active user return rate</li>
+        <li>&lt;3 sec page load on mobile</li>
+        <li>Arabic + English fully functional</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-users" style="color:var(--coral)"></i> Target Users</h3>
+      <p><strong style="color:var(--text)">Primary:</strong> University students (18–26) seeking affordable textbooks.<br><br>
+      <strong style="color:var(--text)">Secondary:</strong> General readers wanting to trade fiction/non-fiction.<br><br>
+      <strong style="color:var(--text)">Tertiary:</strong> Book collectors reselling rare editions.</p>
+    </div>
+  </div>
+
+  <div class="vision-pillar" style="border-color:var(--accent)">
+    <strong style="color:var(--accent)">Core Value Proposition</strong>
+    <p style="color:var(--muted);font-size:0.88rem;margin-top:4px">A book owner lists in 2 minutes. A seeker finds and requests in 30 seconds. No payment gateway. No chat. Just a simple request → accept → meetup flow.</p>
+  </div>
+  <div class="vision-pillar" style="border-color:var(--teal)">
+    <strong style="color:var(--teal)">Technology Bets</strong>
+    <p style="color:var(--muted);font-size:0.88rem;margin-top:4px">Next.js 14 (App Router) + Supabase (Postgres + Auth + Storage + Realtime notifications) + Tailwind CSS. Deployed on Vercel. CI/CD from day 1. Bilingual (ar/en) via next-intl.</p>
+  </div>
+  <div class="vision-pillar" style="border-color:var(--amber)">
+    <strong style="color:var(--amber)">Out of Scope (MVP)</strong>
+    <p style="color:var(--muted);font-size:0.88rem;margin-top:4px">Real-time chat, payment processing, delivery logistics, mobile native apps, AI recommendations (post-MVP backlog).</p>
+  </div>
+
+  <hr class="divider">
+  <h3 style="margin-bottom:1rem;font-size:1rem">🤖 AI Tools for This Phase</h3>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(108,126,255,0.15)">🧠</div>
+    <div class="tool-info">
+      <h4>Claude (claude.ai) — Vision & Strategy</h4>
+      <p>Draft vision doc, refine problem statements, generate competitive analysis, define success metrics. Use Projects feature to maintain context across sessions.</p>
+      <span class="mcp">MCP: claude.ai web interface — no server needed</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(45,212,191,0.15)">📊</div>
+    <div class="tool-info">
+      <h4>Notion AI — Document Structure</h4>
+      <p>Organize vision document, competitive landscape tables, stakeholder maps. Notion's AI can summarize and restructure long docs.</p>
+      <span class="mcp">MCP: mcp.notion.com/mcp (connected in this session)</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(251,191,36,0.15)">🔍</div>
+    <div class="tool-info">
+      <h4>Perplexity AI — Market Research</h4>
+      <p>Research competitor platforms (Abebooks, BookMooch, local apps), MENA market size, student book spending stats. Free tier sufficient.</p>
+      <span class="mcp">MCP: perplexity-mcp via npx (community server)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== REQUIREMENTS ===================== -->
+<div class="section" id="requirements">
+  <div class="sec-header">
+    <span class="badge badge-blue">📑 Phase 2</span>
+    <h2 style="margin-top:8px">Requirements Specification</h2>
+    <p>Functional & non-functional requirements, organized by priority.</p>
+  </div>
+
+  <h3 style="margin-bottom:1rem;font-size:0.95rem;color:var(--muted)">FUNCTIONAL REQUIREMENTS — MoSCoW Priority</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Requirement</th><th>Role</th><th>Priority</th><th>Acceptance Criteria</th></tr></thead>
+      <tbody>
+        <tr><td>FR-01</td><td>User Registration (email or phone)</td><td>Registered User</td><td><span class="badge badge-coral">Must</span></td><td>Account created, email verified, JWT issued</td></tr>
+        <tr><td>FR-02</td><td>Browse listings without login</td><td>Guest</td><td><span class="badge badge-coral">Must</span></td><td>All available listings visible, no auth required</td></tr>
+        <tr><td>FR-03</td><td>Create book listing (CRUD)</td><td>Registered User</td><td><span class="badge badge-coral">Must</span></td><td>Title, author, category, condition, photos, type saved</td></tr>
+        <tr><td>FR-04</td><td>Search & filter books</td><td>All</td><td><span class="badge badge-coral">Must</span></td><td>Full-text search + filter by condition/type/price</td></tr>
+        <tr><td>FR-05</td><td>Send contact request with message</td><td>Registered User</td><td><span class="badge badge-coral">Must</span></td><td>Request stored, owner notified</td></tr>
+        <tr><td>FR-06</td><td>Propose exchange (select own book)</td><td>Registered User</td><td><span class="badge badge-coral">Must</span></td><td>Swap offer linked to requester's listed book</td></tr>
+        <tr><td>FR-07</td><td>Accept / Reject requests</td><td>Registered User</td><td><span class="badge badge-coral">Must</span></td><td>Status updated, requester notified</td></tr>
+        <tr><td>FR-08</td><td>Mark listing as sold/exchanged</td><td>Registered User</td><td><span class="badge badge-coral">Must</span></td><td>Status change reflected immediately</td></tr>
+        <tr><td>FR-09</td><td>Transaction history</td><td>Registered User</td><td><span class="badge badge-blue">Should</span></td><td>Completed deals listed with date, party, type</td></tr>
+        <tr><td>FR-10</td><td>Wishlist</td><td>Registered User</td><td><span class="badge badge-blue">Should</span></td><td>Save listing; notify if relisted</td></tr>
+        <tr><td>FR-11</td><td>Admin: manage categories</td><td>Admin</td><td><span class="badge badge-coral">Must</span></td><td>CRUD on categories, changes reflect in listings</td></tr>
+        <tr><td>FR-12</td><td>Admin: moderate listings & users</td><td>Admin</td><td><span class="badge badge-coral">Must</span></td><td>Suspend/remove; reason logged</td></tr>
+        <tr><td>FR-13</td><td>Admin: analytics dashboard</td><td>Admin</td><td><span class="badge badge-blue">Should</span></td><td>Total listings, active users, exchange volume charts</td></tr>
+        <tr><td>FR-14</td><td>Notifications (in-app)</td><td>Registered User</td><td><span class="badge badge-blue">Should</span></td><td>Request events trigger notification bell update</td></tr>
+        <tr><td>FR-15</td><td>Arabic & English UI</td><td>All</td><td><span class="badge badge-coral">Must</span></td><td>RTL layout for Arabic, locale switcher, full translation</td></tr>
+        <tr><td>FR-16</td><td>Photo upload (up to 5 per listing)</td><td>Registered User</td><td><span class="badge badge-coral">Must</span></td><td>Compressed, stored in CDN, preview shown</td></tr>
+        <tr><td>FR-17</td><td>AI book title autofill (ISBN scan)</td><td>Registered User</td><td><span class="badge badge-amber">Could</span></td><td>Camera → ISBN → prefill title/author/category</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-bottom:1rem;font-size:0.95rem;color:var(--muted)">NON-FUNCTIONAL REQUIREMENTS</h3>
+  <div class="card-grid">
+    <div class="card"><h3><i class="ti ti-bolt" style="color:var(--amber)"></i> Performance</h3><p>Page load &lt;3s on 4G. Listing search &lt;500ms. Images lazy-loaded & WebP-compressed.</p></div>
+    <div class="card"><h3><i class="ti ti-lock" style="color:var(--coral)"></i> Security</h3><p>Row-Level Security on all Supabase tables. HTTPS-only. Phone/email verification. Rate limiting on contact requests.</p></div>
+    <div class="card"><h3><i class="ti ti-device-mobile" style="color:var(--teal)"></i> Responsive</h3><p>Works on mobile browsers. Touch-friendly cards. No native app needed for MVP.</p></div>
+    <div class="card"><h3><i class="ti ti-globe" style="color:var(--blue)"></i> i18n</h3><p>Full Arabic (RTL) and English support. next-intl library. Locale stored in user preferences.</p></div>
+    <div class="card"><h3><i class="ti ti-activity" style="color:var(--green)"></i> Availability</h3><p>99.5% uptime via Vercel + Supabase managed infra. Zero-downtime deploys.</p></div>
+    <div class="card"><h3><i class="ti ti-accessible" style="color:var(--purple)"></i> Accessibility</h3><p>WCAG 2.1 AA. Semantic HTML, ARIA labels, keyboard navigable.</p></div>
+  </div>
+
+  <hr class="divider">
+  <h3 style="margin-bottom:1rem;font-size:1rem">🤖 AI Tools for This Phase</h3>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(108,126,255,0.15)">🧠</div>
+    <div class="tool-info">
+      <h4>Claude — Requirements Elicitation</h4>
+      <p>Prompt: "Act as a senior BA. Given this feature list, generate a complete MoSCoW requirements table with acceptance criteria." Iterate until no gaps.</p>
+      <span class="mcp">MCP: claude.ai — use Projects for persistent context</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(45,212,191,0.15)">📋</div>
+    <div class="tool-info">
+      <h4>Notion AI — Spec Document</h4>
+      <p>Auto-generate requirements spec template, fill in from your inputs, export as PDF for stakeholders.</p>
+      <span class="mcp">MCP: mcp.notion.com/mcp</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(251,113,133,0.15)">🃏</div>
+    <div class="tool-info">
+      <h4>Jira (Free Tier) + Atlassian Rovo AI</h4>
+      <p>Create epics and stories directly. Rovo AI can auto-generate stories from plain English descriptions.</p>
+      <span class="mcp">MCP: mcp.atlassian.com/v1/mcp (connected in this session)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== USER STORIES ===================== -->
+<div class="section" id="stories">
+  <div class="sec-header">
+    <span class="badge badge-teal">👥 Phase 3</span>
+    <h2 style="margin-top:8px">User Stories</h2>
+    <p>Key stories with acceptance criteria, grouped by epic.</p>
+  </div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem">
+    <span class="badge badge-coral">📚 Epic: Listings</span>
+    <span class="badge badge-blue">🔄 Epic: Exchange</span>
+    <span class="badge badge-teal">🔍 Epic: Discovery</span>
+    <span class="badge badge-amber">🛡 Epic: Admin</span>
+    <span class="badge badge-purple">👤 Epic: Auth</span>
+  </div>
+
+  <!-- EPIC: Auth -->
+  <h4 style="color:var(--purple);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Epic: Authentication</h4>
+  <div class="story-card">
+    <div class="as">As a new visitor</div>
+    <div class="want">I want to register with my email or phone number so I can list and request books.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Form accepts email OR phone number with country code</div>
+      <div class="ac-item">OTP verification sent within 30 seconds</div>
+      <div class="ac-item">Duplicate account detected and shown a clear error</div>
+      <div class="ac-item">On success, redirected to "Complete Profile" page</div>
+    </div>
+  </div>
+  <div class="story-card">
+    <div class="as">As a registered user</div>
+    <div class="want">I want to log in with my credentials so I can access my dashboard and listings.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Login via email+password or phone+OTP</div>
+      <div class="ac-item">JWT token valid for 7 days, refreshes automatically</div>
+      <div class="ac-item">Failed login shows specific error (wrong password vs unknown email)</div>
+    </div>
+  </div>
+
+  <!-- EPIC: Listings -->
+  <h4 style="color:var(--coral);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem">Epic: Listings</h4>
+  <div class="story-card">
+    <div class="as">As a registered user</div>
+    <div class="want">I want to add a book listing with photos, condition, and listing type so others can find and request my book.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Required fields: title, author, category, condition, listing type</div>
+      <div class="ac-item">Up to 5 photos uploadable; each compressed &lt;500KB</div>
+      <div class="ac-item">Listing type is "For Sale" (with price) OR "For Exchange"</div>
+      <div class="ac-item">Listing appears in search within 10 seconds of creation</div>
+      <div class="ac-item">Autosave draft if user navigates away mid-form</div>
+    </div>
+  </div>
+  <div class="story-card">
+    <div class="as">As a listing owner</div>
+    <div class="want">I want to mark my listing as Sold, Exchanged, or Unavailable so the status is accurate for other users.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Status dropdown available on "My Listings" page</div>
+      <div class="ac-item">Sold/Exchanged listings filtered out of main search by default</div>
+      <div class="ac-item">Users with the book wishlisted receive a notification</div>
+    </div>
+  </div>
+
+  <!-- EPIC: Discovery -->
+  <h4 style="color:var(--teal);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem">Epic: Discovery</h4>
+  <div class="story-card">
+    <div class="as">As a guest</div>
+    <div class="want">I want to search and filter books by title, author, category, and condition without creating an account so I can explore before committing.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Search bar visible on homepage and all listing pages</div>
+      <div class="ac-item">Filters: condition (multi-select), listing type, price range slider</div>
+      <div class="ac-item">Results update without full page reload (client-side filtering)</div>
+      <div class="ac-item">Sort by: Newest, Price (low-high), Price (high-low)</div>
+      <div class="ac-item">Clicking "Contact Seller" while guest prompts registration modal</div>
+    </div>
+  </div>
+
+  <!-- EPIC: Exchange -->
+  <h4 style="color:var(--blue);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem">Epic: Exchange & Purchase Requests</h4>
+  <div class="story-card">
+    <div class="as">As a registered user</div>
+    <div class="want">I want to propose an exchange by selecting one of my own listed books as the swap offer so the seller can evaluate the deal.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Only "For Exchange" listings show the swap proposal UI</div>
+      <div class="ac-item">User can select from their own available listed books as offer</div>
+      <div class="ac-item">Optional message (max 500 chars) attachable to proposal</div>
+      <div class="ac-item">If user has no listed books, prompted to list one first</div>
+      <div class="ac-item">Duplicate request to same listing blocked</div>
+    </div>
+  </div>
+  <div class="story-card">
+    <div class="as">As a listing owner</div>
+    <div class="want">I want to accept or reject incoming requests so I can manage my exchanges clearly.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Requests page shows pending/accepted/rejected with timestamps</div>
+      <div class="ac-item">Accepting a request auto-rejects all other pending requests for same listing</div>
+      <div class="ac-item">Requester notified via in-app notification on status change</div>
+      <div class="ac-item">Accepted request shows requester's contact info (email/phone)</div>
+    </div>
+  </div>
+
+  <!-- EPIC: Admin -->
+  <h4 style="color:var(--amber);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem">Epic: Admin</h4>
+  <div class="story-card">
+    <div class="as">As an admin</div>
+    <div class="want">I want to view platform analytics so I can understand usage and make configuration decisions.</div>
+    <div class="acceptance">
+      <span>Acceptance Criteria</span>
+      <div class="ac-item">Dashboard shows: total listings, active users (last 30 days), exchange count</div>
+      <div class="ac-item">Bar chart: listings by category</div>
+      <div class="ac-item">Table: most requested books (top 10)</div>
+      <div class="ac-item">Export data as CSV</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h3 style="margin-bottom:1rem;font-size:1rem">🤖 AI Tools for This Phase</h3>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(108,126,255,0.15)">🧠</div>
+    <div class="tool-info">
+      <h4>Claude — Story Generation</h4>
+      <p>Prompt: "Given these features, generate 20 user stories in Given-When-Then format with acceptance criteria. Prioritize by business value." Great for bulk generation then editing.</p>
+      <span class="mcp">MCP: claude.ai Projects</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(251,113,133,0.15)">🃏</div>
+    <div class="tool-info">
+      <h4>Jira Free + Atlassian Rovo AI</h4>
+      <p>Paste story text → Rovo AI creates the Jira issue, assigns story points, suggests epic. Create issues directly from this chat via MCP.</p>
+      <span class="mcp">MCP: mcp.atlassian.com/v1/mcp (active)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== USE CASE ===================== -->
+<div class="section" id="usecase">
+  <div class="sec-header">
+    <span class="badge badge-amber">🔄 Phase 4</span>
+    <h2 style="margin-top:8px">Use Case Diagram</h2>
+    <p>Key actors and their interactions with the system.</p>
+  </div>
+
+  <div class="card" style="overflow-x:auto">
+    <svg viewBox="0 0 780 600" width="100%" style="min-width:600px">
+      <!-- System boundary -->
+      <rect x="160" y="20" width="500" height="560" rx="12" fill="none" stroke="rgba(108,126,255,0.3)" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <text x="410" y="50" text-anchor="middle" fill="#6c7eff" font-size="13" font-weight="700" font-family="system-ui">Book Exchange System</text>
+
+      <!-- ACTORS -->
+      <!-- Guest -->
+      <circle cx="60" cy="150" r="18" fill="none" stroke="#8b8fa8" stroke-width="1.5"/>
+      <line x1="60" y1="168" x2="60" y2="210" stroke="#8b8fa8" stroke-width="1.5"/>
+      <line x1="38" y1="185" x2="82" y2="185" stroke="#8b8fa8" stroke-width="1.5"/>
+      <line x1="60" y1="210" x2="42" y2="235" stroke="#8b8fa8" stroke-width="1.5"/>
+      <line x1="60" y1="210" x2="78" y2="235" stroke="#8b8fa8" stroke-width="1.5"/>
+      <text x="60" y="252" text-anchor="middle" fill="#8b8fa8" font-size="11" font-family="system-ui">Guest</text>
+
+      <!-- Registered User -->
+      <circle cx="60" cy="330" r="18" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+      <line x1="60" y1="348" x2="60" y2="390" stroke="#60a5fa" stroke-width="1.5"/>
+      <line x1="38" y1="365" x2="82" y2="365" stroke="#60a5fa" stroke-width="1.5"/>
+      <line x1="60" y1="390" x2="42" y2="415" stroke="#60a5fa" stroke-width="1.5"/>
+      <line x1="60" y1="390" x2="78" y2="415" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="60" y="432" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="system-ui">Reg. User</text>
+
+      <!-- Admin -->
+      <circle cx="730" cy="300" r="18" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+      <line x1="730" y1="318" x2="730" y2="360" stroke="#fbbf24" stroke-width="1.5"/>
+      <line x1="708" y1="335" x2="752" y2="335" stroke="#fbbf24" stroke-width="1.5"/>
+      <line x1="730" y1="360" x2="712" y2="385" stroke="#fbbf24" stroke-width="1.5"/>
+      <line x1="730" y1="360" x2="748" y2="385" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="730" y="402" text-anchor="middle" fill="#fbbf24" font-size="11" font-family="system-ui">Admin</text>
+
+      <!-- USE CASES — Guest -->
+      <ellipse cx="300" cy="110" rx="115" ry="22" fill="rgba(139,143,168,0.1)" stroke="#8b8fa8" stroke-width="1"/>
+      <text x="300" y="114" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Browse Listings</text>
+      <line x1="78" y1="150" x2="185" y2="115" stroke="#8b8fa8" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="490" cy="110" rx="115" ry="22" fill="rgba(139,143,168,0.1)" stroke="#8b8fa8" stroke-width="1"/>
+      <text x="490" y="114" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Search &amp; Filter Books</text>
+      <line x1="78" y1="153" x2="375" y2="113" stroke="#8b8fa8" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="395" cy="165" rx="115" ry="22" fill="rgba(139,143,168,0.1)" stroke="#8b8fa8" stroke-width="1"/>
+      <text x="395" y="169" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">View Book Details</text>
+      <line x1="78" y1="156" x2="280" y2="163" stroke="#8b8fa8" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- USE CASES — Registered User -->
+      <ellipse cx="300" cy="250" rx="115" ry="22" fill="rgba(96,165,250,0.1)" stroke="#60a5fa" stroke-width="1"/>
+      <text x="300" y="254" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Register / Login</text>
+      <line x1="78" y1="325" x2="185" y2="256" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="490" cy="250" rx="115" ry="22" fill="rgba(96,165,250,0.1)" stroke="#60a5fa" stroke-width="1"/>
+      <text x="490" y="254" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Create / Edit Listing</text>
+      <line x1="78" y1="328" x2="375" y2="253" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="300" cy="320" rx="115" ry="22" fill="rgba(96,165,250,0.1)" stroke="#60a5fa" stroke-width="1"/>
+      <text x="300" y="324" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Send Contact Request</text>
+      <line x1="78" y1="338" x2="185" y2="322" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="490" cy="320" rx="115" ry="22" fill="rgba(96,165,250,0.1)" stroke="#60a5fa" stroke-width="1"/>
+      <text x="490" y="324" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Propose Exchange</text>
+      <line x1="78" y1="342" x2="375" y2="323" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="300" cy="390" rx="115" ry="22" fill="rgba(96,165,250,0.1)" stroke="#60a5fa" stroke-width="1"/>
+      <text x="300" y="394" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Accept / Reject Requests</text>
+      <line x1="78" y1="348" x2="185" y2="390" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="490" cy="390" rx="115" ry="22" fill="rgba(96,165,250,0.1)" stroke="#60a5fa" stroke-width="1"/>
+      <text x="490" y="394" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Manage Wishlist</text>
+      <line x1="78" y1="352" x2="375" y2="391" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="395" cy="460" rx="115" ry="22" fill="rgba(96,165,250,0.1)" stroke="#60a5fa" stroke-width="1"/>
+      <text x="395" y="464" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">View Transaction History</text>
+      <line x1="78" y1="360" x2="280" y2="458" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- USE CASES — Admin -->
+      <ellipse cx="490" cy="460" rx="115" ry="22" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1"/>
+      <text x="490" y="464" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Moderate Listings/Users</text>
+      <line x1="712" y1="305" x2="605" y2="462" stroke="#fbbf24" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="490" cy="530" rx="115" ry="22" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1"/>
+      <text x="490" y="534" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">View Analytics Dashboard</text>
+      <line x1="712" y1="310" x2="605" y2="530" stroke="#fbbf24" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <ellipse cx="290" cy="530" rx="115" ry="22" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1"/>
+      <text x="290" y="534" text-anchor="middle" fill="#e8e9f0" font-size="11" font-family="system-ui">Manage Categories</text>
+      <line x1="712" y1="315" x2="405" y2="532" stroke="#fbbf24" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- Legend -->
+      <line x1="170" y1="578" x2="195" y2="578" stroke="#8b8fa8" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="200" y="582" fill="#8b8fa8" font-size="10" font-family="system-ui">Actor → Use Case</text>
+    </svg>
+  </div>
+
+  <hr class="divider">
+  <h3 style="margin-bottom:1rem;font-size:1rem">🤖 AI Tools for This Phase</h3>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(45,212,191,0.15)">📐</div>
+    <div class="tool-info">
+      <h4>Eraser.io (free tier) — Diagram as Code</h4>
+      <p>Write use case diagrams in plain text syntax, AI renders them. Export as SVG/PNG. Great for quick iteration with team.</p>
+      <span class="mcp">No MCP — web UI at eraser.io</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(108,126,255,0.15)">🧠</div>
+    <div class="tool-info">
+      <h4>Claude — Generate PlantUML</h4>
+      <p>Ask Claude to generate PlantUML use case diagram code → paste into plantuml.com for rendering. Free, fast, no account needed.</p>
+      <span class="mcp">MCP: claude.ai</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ERD ===================== -->
+<div class="section" id="erd">
+  <div class="sec-header">
+    <span class="badge badge-green">🗄 Phase 5</span>
+    <h2 style="margin-top:8px">Entity Relationship Diagram (ERD)</h2>
+    <p>Database schema for Supabase (PostgreSQL).</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem">
+    <h3 style="margin-bottom:1rem;font-size:0.95rem"><i class="ti ti-database" style="color:var(--green)"></i> Core Entities</h3>
+    <div class="erd-grid">
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">users</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>email</span><span style="color:var(--muted)">text unique</span></div>
+        <div class="erd-entity-field"><span>phone</span><span style="color:var(--muted)">text unique</span></div>
+        <div class="erd-entity-field"><span>display_name</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>avatar_url</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>role</span><span style="color:var(--muted)">enum</span></div>
+        <div class="erd-entity-field"><span>is_suspended</span><span style="color:var(--muted)">bool</span></div>
+        <div class="erd-entity-field"><span>locale</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>created_at</span><span style="color:var(--muted)">timestamptz</span></div>
+      </div>
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">books</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>owner_id</span><span class="fk">FK users</span></div>
+        <div class="erd-entity-field"><span>category_id</span><span class="fk">FK categories</span></div>
+        <div class="erd-entity-field"><span>title</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>author</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>description</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>condition</span><span style="color:var(--muted)">enum</span></div>
+        <div class="erd-entity-field"><span>listing_type</span><span style="color:var(--muted)">enum</span></div>
+        <div class="erd-entity-field"><span>price</span><span style="color:var(--muted)">numeric(10,2)</span></div>
+        <div class="erd-entity-field"><span>status</span><span style="color:var(--muted)">enum</span></div>
+        <div class="erd-entity-field"><span>search_vector</span><span style="color:var(--muted)">tsvector</span></div>
+        <div class="erd-entity-field"><span>created_at</span><span style="color:var(--muted)">timestamptz</span></div>
+      </div>
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">book_photos</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>book_id</span><span class="fk">FK books</span></div>
+        <div class="erd-entity-field"><span>url</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>position</span><span style="color:var(--muted)">int</span></div>
+      </div>
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">categories</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>name_en</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>name_ar</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>slug</span><span style="color:var(--muted)">text unique</span></div>
+        <div class="erd-entity-field"><span>icon</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>is_active</span><span style="color:var(--muted)">bool</span></div>
+      </div>
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">contact_requests</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>book_id</span><span class="fk">FK books</span></div>
+        <div class="erd-entity-field"><span>requester_id</span><span class="fk">FK users</span></div>
+        <div class="erd-entity-field"><span>offered_book_id</span><span class="fk">FK books?</span></div>
+        <div class="erd-entity-field"><span>message</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>status</span><span style="color:var(--muted)">enum</span></div>
+        <div class="erd-entity-field"><span>created_at</span><span style="color:var(--muted)">timestamptz</span></div>
+        <div class="erd-entity-field"><span>responded_at</span><span style="color:var(--muted)">timestamptz</span></div>
+      </div>
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">transactions</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>request_id</span><span class="fk">FK contact_requests</span></div>
+        <div class="erd-entity-field"><span>book_id</span><span class="fk">FK books</span></div>
+        <div class="erd-entity-field"><span>seller_id</span><span class="fk">FK users</span></div>
+        <div class="erd-entity-field"><span>buyer_id</span><span class="fk">FK users</span></div>
+        <div class="erd-entity-field"><span>type</span><span style="color:var(--muted)">enum</span></div>
+        <div class="erd-entity-field"><span>completed_at</span><span style="color:var(--muted)">timestamptz</span></div>
+      </div>
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">wishlist</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>user_id</span><span class="fk">FK users</span></div>
+        <div class="erd-entity-field"><span>book_id</span><span class="fk">FK books</span></div>
+        <div class="erd-entity-field"><span>created_at</span><span style="color:var(--muted)">timestamptz</span></div>
+      </div>
+
+      <div class="erd-entity">
+        <div class="erd-entity-header">notifications</div>
+        <div class="erd-entity-field"><span>id</span><span class="pk">PK uuid</span></div>
+        <div class="erd-entity-field"><span>user_id</span><span class="fk">FK users</span></div>
+        <div class="erd-entity-field"><span>type</span><span style="color:var(--muted)">enum</span></div>
+        <div class="erd-entity-field"><span>title</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>body</span><span style="color:var(--muted)">text</span></div>
+        <div class="erd-entity-field"><span>is_read</span><span style="color:var(--muted)">bool</span></div>
+        <div class="erd-entity-field"><span>ref_id</span><span style="color:var(--muted)">uuid</span></div>
+        <div class="erd-entity-field"><span>created_at</span><span style="color:var(--muted)">timestamptz</span></div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">
+      <strong style="color:var(--amber)">PK</strong> = Primary Key &nbsp;·&nbsp;
+      <strong style="color:var(--coral)">FK</strong> = Foreign Key &nbsp;·&nbsp;
+      Enums: <span class="inline-code">role: guest|user|admin</span> &nbsp;
+      <span class="inline-code">condition: new|good|acceptable|poor</span> &nbsp;
+      <span class="inline-code">listing_type: sale|exchange</span> &nbsp;
+      <span class="inline-code">status: available|sold|exchanged|unavailable</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:.75rem;font-size:0.95rem"><i class="ti ti-code" style="color:var(--green)"></i> Key SQL — Full-Text Search Setup</h3>
+    <pre><code style="color:var(--text)">-- Full-text search vector (auto-updated trigger)
+ALTER TABLE books ADD COLUMN search_vector tsvector
+  GENERATED ALWAYS AS (
+    to_tsvector('simple', coalesce(title, '') || ' ' ||
+    coalesce(author, '') || ' ' || coalesce(description, ''))
+  ) STORED;
+
+CREATE INDEX books_search_idx ON books USING gin(search_vector);
+
+-- Search query
+SELECT * FROM books
+WHERE search_vector @@ plainto_tsquery('simple', :query)
+  AND status = 'available'
+ORDER BY ts_rank(search_vector, plainto_tsquery('simple', :query)) DESC;</code></pre>
+  </div>
+
+  <hr class="divider">
+  <h3 style="margin-bottom:1rem;font-size:1rem">🤖 AI Tools for This Phase</h3>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(108,126,255,0.15)">🧠</div>
+    <div class="tool-info">
+      <h4>Claude — Schema Design & SQL Generation</h4>
+      <p>Describe your entities in plain English → Claude generates Supabase-compatible SQL migrations with RLS policies, indexes, and triggers.</p>
+      <span class="mcp">MCP: claude.ai + Supabase MCP (supabase.com/docs/guides/ai/mcp)</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(45,212,191,0.15)">🗺</div>
+    <div class="tool-info">
+      <h4>dbdiagram.io (free) — Visual ERD</h4>
+      <p>Paste DBML syntax → visual ERD auto-renders. Share link with team. Export as PNG/PDF. Claude can generate DBML from your schema.</p>
+      <span class="mcp">No MCP — web app at dbdiagram.io</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(74,222,128,0.15)">🔒</div>
+    <div class="tool-info">
+      <h4>Supabase AI (built-in)</h4>
+      <p>Supabase dashboard has an AI assistant that suggests SQL queries, RLS policies, and schema fixes. Free on Spark plan.</p>
+      <span class="mcp">MCP: Supabase MCP server (official, connect via npx)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== API ===================== -->
+<div class="section" id="api">
+  <div class="sec-header">
+    <span class="badge badge-blue">🌐 Phase 6</span>
+    <h2 style="margin-top:8px">API Documentation</h2>
+    <p>RESTful API design — Next.js Route Handlers + Supabase client.</p>
+  </div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem">
+    <span style="font-size:0.8rem;color:var(--muted)">Base URL: <span class="inline-code">https://yourapp.vercel.app/api/v1</span></span>
+    <span style="font-size:0.8rem;color:var(--muted)">Auth: <span class="inline-code">Bearer {supabase_jwt}</span></span>
+  </div>
+
+  <h4 style="color:var(--muted);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">📚 Books</h4>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/books</span>
+      <span class="ep-desc">List & search books (public)</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:.5rem">Query params: <span class="inline-code">q, category_id, condition, listing_type, min_price, max_price, sort, page, limit</span></p>
+      <pre><code style="color:var(--text)">// Response 200
+{
+  "data": [{ "id": "uuid", "title": "...", "author": "...", "condition": "good",
+             "listing_type": "exchange", "price": null, "photos": ["url"],
+             "owner": { "display_name": "Ahmed", "avatar_url": "..." } }],
+  "meta": { "total": 120, "page": 1, "per_page": 20 }
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/books/:id</span>
+      <span class="ep-desc">Book detail (public)</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">// Response 200 — full listing with all photos and owner preview
+{ "id": "uuid", "title": "...", "description": "...", "photos": [...],
+  "owner": { "id": "uuid", "display_name": "Sara", "listings_count": 5 },
+  "status": "available" }</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/books</span>
+      <span class="ep-desc">Create listing (auth required)</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">// Body (multipart/form-data)
+{ "title": "Clean Code", "author": "Robert Martin", "category_id": "uuid",
+  "condition": "good", "listing_type": "sale", "price": 50,
+  "description": "Great condition, minor pencil marks",
+  "photos": [File, File] }
+
+// Response 201
+{ "id": "uuid", "status": "available", ... }</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method PATCH">PATCH</span>
+      <span class="ep-path">/books/:id</span>
+      <span class="ep-desc">Update listing (owner only)</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">// Body: any updatable field
+{ "status": "sold" }  // or "price": 40, "description": "..."
+
+// Response 200 — updated book object</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method DELETE">DELETE</span>
+      <span class="ep-path">/books/:id</span>
+      <span class="ep-desc">Delete listing (owner or admin)</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">// Response 204 No Content
+// Side effects: cascades to book_photos, cancels pending requests</code></pre>
+    </div>
+  </div>
+
+  <h4 style="color:var(--muted);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem">🔄 Contact Requests</h4>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/books/:id/requests</span>
+      <span class="ep-desc">Send contact / exchange request</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">{ "message": "Hi, is this still available?",
+  "offered_book_id": "uuid" }  // only for exchange listings
+
+// Response 201
+{ "id": "uuid", "status": "pending", "created_at": "..." }
+// Triggers notification to book owner</code></pre>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method PATCH">PATCH</span>
+      <span class="ep-path">/requests/:id</span>
+      <span class="ep-desc">Accept or reject a request</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">{ "action": "accept" }  // or "reject"
+
+// On accept:
+// 1. Request status → accepted
+// 2. Other pending requests → rejected
+// 3. Book status → sold/exchanged
+// 4. Transaction record created
+// 5. Requester notified with owner contact info
+// Response 200: { "status": "accepted", "requester_contact": {...} }</code></pre>
+    </div>
+  </div>
+
+  <h4 style="color:var(--muted);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem">👤 Users & Auth</h4>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/auth/register</span>
+      <span class="ep-desc">Register new user</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">{ "email": "...", "password": "...", "display_name": "Ahmed" }
+// or: { "phone": "+201234567890" }
+
+// Response 201: { "user": {...}, "session": { "access_token": "..." } }
+// Handles via Supabase Auth directly (no custom endpoint needed)</code></pre>
+    </div>
+  </div>
+
+  <h4 style="color:var(--muted);font-size:0.82rem;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem">🛡 Admin</h4>
+
+  <div class="endpoint">
+    <div class="ep-header" onclick="toggleEp(this)">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/admin/analytics</span>
+      <span class="ep-desc">Platform stats (admin only)</span>
+      <i class="ti ti-chevron-down" style="color:var(--muted);margin-left:auto"></i>
+    </div>
+    <div class="ep-body">
+      <pre><code style="color:var(--text)">// Response 200
+{ "total_listings": 450, "active_listings": 320, "active_users_30d": 180,
+  "exchanges_completed": 87, "sales_completed": 134,
+  "top_categories": [{ "name": "Computer Science", "count": 95 }],
+  "top_books": [{ "title": "...", "request_count": 12 }] }</code></pre>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h3 style="margin-bottom:1rem;font-size:1rem">🤖 AI Tools for This Phase</h3>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(251,191,36,0.15)">📄</div>
+    <div class="tool-info">
+      <h4>Mintlify (free tier) — API Docs Site</h4>
+      <p>Write docs in MDX, auto-generates beautiful hosted API reference site. Claude can generate the MDX content from your route handlers.</p>
+      <span class="mcp">No MCP — CLI tool: npx mintlify dev</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(45,212,191,0.15)">⚡</div>
+    <div class="tool-info">
+      <h4>Bruno (free) — API Testing</h4>
+      <p>Open-source Postman alternative. Claude can generate Bruno collection JSON files from your API spec for team-shared testing.</p>
+      <span class="mcp">No MCP — desktop app usebruno.com</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WIREFRAMES ===================== -->
+<div class="section" id="wireframes">
+  <div class="sec-header">
+    <span class="badge badge-coral">🎨 Phase 7</span>
+    <h2 style="margin-top:8px">Wireframes</h2>
+    <p>Key screen layouts — Homepage, Book Detail, Dashboard, Admin.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem">
+
+    <!-- Homepage -->
+    <div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:.5rem;font-weight:600">🏠 Homepage (Guest)</p>
+      <div class="wireframe">
+        <div class="wf-bar"><div class="wf-dot" style="background:#ff5f57"></div><div class="wf-dot" style="background:#ffbd2e"></div><div class="wf-dot" style="background:#28c840"></div></div>
+        <div class="wf-nav">
+          <span style="color:var(--accent);font-weight:600">📚 Kutubna</span>
+          <span>Browse</span><span>Categories</span>
+          <span style="margin-left:auto;color:var(--accent)">Login / Register</span>
+        </div>
+        <div class="wf-body">
+          <div class="wf-hero">
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:4px">Find your next book 📖</div>
+            <div style="font-size:0.75rem;color:var(--muted)">Buy, sell or exchange used books with readers near you</div>
+            <div style="margin-top:.75rem;display:flex;gap:6px;justify-content:center">
+              <div style="background:var(--accent);color:white;padding:5px 14px;border-radius:6px;font-size:0.75rem;font-weight:600">Browse Books</div>
+              <div style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:5px 14px;border-radius:6px;font-size:0.75rem">List a Book</div>
+            </div>
+          </div>
+          <div class="wf-search"><i class="ti ti-search" style="font-size:14px"></i> Search by title, author, or category...</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:.5rem;font-weight:600">Recent Listings</div>
+          <div class="wf-grid3">
+            <div class="wf-book"><div class="wf-book-img"></div><div class="wf-book-title">Clean Code</div><div class="wf-book-sub">For Exchange</div></div>
+            <div class="wf-book"><div class="wf-book-img"></div><div class="wf-book-title">1984</div><div class="wf-book-sub">50 EGP</div></div>
+            <div class="wf-book"><div class="wf-book-img"></div><div class="wf-book-title">Dune</div><div class="wf-book-sub">For Exchange</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Detail -->
+    <div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:.5rem;font-weight:600">📖 Book Detail Page</p>
+      <div class="wireframe">
+        <div class="wf-bar"><div class="wf-dot" style="background:#ff5f57"></div><div class="wf-dot" style="background:#ffbd2e"></div><div class="wf-dot" style="background:#28c840"></div></div>
+        <div class="wf-nav"><span style="color:var(--accent);font-weight:600">📚 Kutubna</span><span>← Browse</span></div>
+        <div class="wf-body">
+          <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin-bottom:10px">
+            <div style="background:var(--bg2);border-radius:6px;height:120px"></div>
+            <div>
+              <div style="font-weight:700;font-size:0.9rem;margin-bottom:3px">Clean Code</div>
+              <div style="font-size:0.75rem;color:var(--muted)">Robert C. Martin</div>
+              <div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap">
+                <span class="badge badge-blue">Good</span>
+                <span class="badge badge-teal">For Exchange</span>
+              </div>
+              <div style="font-size:0.75rem;color:var(--muted)">Category: Computer Science</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:3px">Listed by: Ahmed K.</div>
+            </div>
+          </div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;background:var(--bg2);padding:8px;border-radius:6px">Minor pencil marks on first 20 pages. Spine intact. Great for students.</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="background:var(--accent);color:white;padding:7px;border-radius:6px;text-align:center;font-size:0.8rem;font-weight:600">Propose Exchange</div>
+            <div style="background:transparent;border:1px solid var(--border2);color:var(--muted);padding:7px;border-radius:6px;text-align:center;font-size:0.8rem">Save to Wishlist</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:.5rem;font-weight:600">👤 User Dashboard</p>
+      <div class="wireframe">
+        <div class="wf-bar"><div class="wf-dot" style="background:#ff5f57"></div><div class="wf-dot" style="background:#ffbd2e"></div><div class="wf-dot" style="background:#28c840"></div></div>
+        <div class="wf-nav"><span style="color:var(--accent);font-weight:600">📚 Kutubna</span><span>Listings</span><span>Requests</span><span>History</span><span class="active">Dashboard</span></div>
+        <div class="wf-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+            <div style="background:rgba(108,126,255,0.1);border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.2rem;font-weight:700;color:var(--accent)">7</div><div style="font-size:0.68rem;color:var(--muted)">Active Listings</div></div>
+            <div style="background:rgba(45,212,191,0.1);border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.2rem;font-weight:700;color:var(--teal)">3</div><div style="font-size:0.68rem;color:var(--muted)">Requests</div></div>
+            <div style="background:rgba(251,191,36,0.1);border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.2rem;font-weight:700;color:var(--amber)">12</div><div style="font-size:0.68rem;color:var(--muted)">Exchanges</div></div>
+          </div>
+          <div style="font-size:0.75rem;font-weight:600;margin-bottom:5px">Pending Requests</div>
+          <div style="background:var(--bg2);border-radius:6px;padding:8px;font-size:0.75rem;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <div>Sara wants <strong style="color:var(--text)">Clean Code</strong></div>
+            <div style="display:flex;gap:4px">
+              <span style="background:rgba(74,222,128,0.15);color:var(--green);padding:2px 7px;border-radius:4px;font-size:0.68rem">Accept</span>
+              <span style="background:rgba(251,113,133,0.15);color:var(--coral);padding:2px 7px;border-radius:4px;font-size:0.68rem">Reject</span>
+            </div>
+          </div>
+          <div style="font-size:0.75rem;font-weight:600;margin:8px 0 5px">My Listings</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="background:var(--bg2);border-radius:5px;padding:6px;font-size:0.73rem;display:flex;align-items:center;justify-content:space-between"><span>Clean Code · <span style="color:var(--teal)">Exchange</span></span><span style="color:var(--green);font-size:0.68rem">● Available</span></div>
+            <div style="background:var(--bg2);border-radius:5px;padding:6px;font-size:0.73rem;display:flex;align-items:center;justify-content:space-between"><span>1984 · <span style="color:var(--amber)">50 EGP</span></span><span style="color:var(--amber);font-size:0.68rem">● Available</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:.5rem;font-weight:600">🛡 Admin Dashboard</p>
+      <div class="wireframe">
+        <div class="wf-bar"><div class="wf-dot" style="background:#ff5f57"></div><div class="wf-dot" style="background:#ffbd2e"></div><div class="wf-dot" style="background:#28c840"></div></div>
+        <div class="wf-nav"><span style="color:var(--amber);font-weight:600">🛡 Admin</span><span>Listings</span><span>Users</span><span class="active">Analytics</span><span>Settings</span></div>
+        <div class="wf-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+            <div style="background:rgba(108,126,255,0.1);border-radius:6px;padding:8px"><div style="font-size:1.3rem;font-weight:700;color:var(--accent)">450</div><div style="font-size:0.68rem;color:var(--muted)">Total Listings</div></div>
+            <div style="background:rgba(74,222,128,0.1);border-radius:6px;padding:8px"><div style="font-size:1.3rem;font-weight:700;color:var(--green)">180</div><div style="font-size:0.68rem;color:var(--muted)">Active Users</div></div>
+            <div style="background:rgba(45,212,191,0.1);border-radius:6px;padding:8px"><div style="font-size:1.3rem;font-weight:700;color:var(--teal)">87</div><div style="font-size:0.68rem;color:var(--muted)">Exchanges Done</div></div>
+            <div style="background:rgba(251,191,36,0.1);border-radius:6px;padding:8px"><div style="font-size:1.3rem;font-weight:700;color:var(--amber)">134</div><div style="font-size:0.68rem;color:var(--muted)">Sales Done</div></div>
+          </div>
+          <div style="font-size:0.75rem;font-weight:600;margin-bottom:5px">Top Categories</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:2px"><span>Computer Science</span><span>95</span></div><div style="background:var(--border);border-radius:99px;height:5px"><div style="width:85%;background:var(--accent);border-radius:99px;height:5px"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:2px"><span>Literature</span><span>78</span></div><div style="background:var(--border);border-radius:99px;height:5px"><div style="width:68%;background:var(--teal);border-radius:99px;height:5px"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:2px"><span>Engineering</span><span>62</span></div><div style="background:var(--border);border-radius:99px;height:5px"><div style="width:54%;background:var(--amber);border-radius:99px;height:5px"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+  <h3 style="margin-bottom:1rem;font-size:1rem">🤖 AI Tools for This Phase</h3>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(251,113,133,0.15)">🎨</div>
+    <div class="tool-info">
+      <h4>v0.dev (Vercel) — Free AI UI Generator</h4>
+      <p>Describe your screen in natural language → v0 generates production-ready React + Tailwind code. Free tier available. Best tool for this step.</p>
+      <span class="mcp">No MCP — v0.dev web app (paste output into your Next.js project)</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(192,132,252,0.15)">🖌</div>
+    <div class="tool-info">
+      <h4>Figma (free) + Builder.io Figma AI</h4>
+      <p>Design in Figma free tier. Builder.io AI plugin converts Figma designs to Next.js/React code. Great for client presentations.</p>
+      <span class="mcp">No MCP — Figma desktop app + Builder.io plugin</span>
+    </div>
+  </div>
+  <div class="tool-card">
+    <div class="tool-icon" style="background:rgba(96,165,250,0.15)">⚡</div>
+    <div class="tool-info">
+      <h4>Bolt.new — Full Stack Prototype in Browser</h4>
+      <p>Describe the full UI → Bolt generates working Next.js + Tailwind app with pages. Great for quick clickable demo. Free tier generous.</p>
+      <span class="mcp">No MCP — bolt.new web app</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SPRINT ===================== -->
+<div class="section" id="sprint">
+  <div class="sec-header">
+    <span class="badge badge-amber">📊 Phase 8</span>
+    <h2 style="margin-top:8px">Sprint Plan</h2>
+    <p>6 two-week sprints → working MVP. Story points: Fibonacci scale (1,2,3,5,8,13).</p>
+  </div>
+
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:1.5rem">
+    <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--muted)"><div style="width:10px;height:10px;border-radius:2px;background:var(--accent)"></div>Frontend</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--muted)"><div style="width:10px;height:10px;border-radius:2px;background:var(--teal)"></div>Backend/DB</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--muted)"><div style="width:10px;height:10px;border-radius:2px;background:var(--amber)"></div>Infra/DevOps</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--muted)"><div style="width:10px;height:10px;border-radius:2px;background:var(--coral)"></div>QA/Testing</div>
+  </div>
+
+  <div class="sprint">
+    <div class="sprint-header" onclick="toggleSprint(this)">
+      <div>
+        <span class="badge badge-blue" style="margin-right:8px">Sprint 1</span>
+        <h4 style="display:inline">Foundation & Auth — Weeks 1–2</h4>
+      </div>
+      <span style="color:var(--muted);font-size:0.8rem">32 pts <i class="ti ti-chevron-down"></i></span>
+    </div>
+    <div class="sprint-body">
+      <div class="story"><i class="ti ti-database" style="color:var(--teal)"></i>Setup Supabase project, schema migration, RLS policies<span class="pts">8</span></div>
+      <div class="story"><i class="ti ti-cloud" style="color:var(--amber)"></i>Vercel project, GitHub repo, CI/CD pipeline (auto-deploy on push)<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-code" style="color:var(--accent)"></i>Next.js 14 App Router scaffold + Tailwind + next-intl (AR/EN)<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-user-plus" style="color:var(--accent)"></i>Registration UI: email/phone form + OTP verification<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-login" style="color:var(--accent)"></i>Login page + JWT session management (Supabase Auth)<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-layout" style="color:var(--accent)"></i>Base layout: navbar, footer, mobile-responsive shell<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-test-pipe" style="color:var(--coral)"></i>Auth integration tests (register, login, logout flows)<span class="pts">3</span></div>
+    </div>
+  </div>
+
+  <div class="sprint">
+    <div class="sprint-header" onclick="toggleSprint(this)">
+      <div><span class="badge badge-teal" style="margin-right:8px">Sprint 2</span><h4 style="display:inline">Book Listings CRUD — Weeks 3–4</h4></div>
+      <span style="color:var(--muted);font-size:0.8rem">38 pts <i class="ti ti-chevron-down"></i></span>
+    </div>
+    <div class="sprint-body">
+      <div class="story"><i class="ti ti-database" style="color:var(--teal)"></i>Books table + categories seed data + book_photos storage bucket<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-forms" style="color:var(--accent)"></i>Create listing form: all fields, condition/type selectors<span class="pts">8</span></div>
+      <div class="story"><i class="ti ti-photo" style="color:var(--accent)"></i>Multi-photo upload (up to 5, compress + preview)<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-layout-grid" style="color:var(--accent)"></i>Book cards component + listings grid page<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-book" style="color:var(--accent)"></i>Book detail page with all info + owner preview<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-edit" style="color:var(--accent)"></i>Edit/delete own listing + status change dropdown<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-test-pipe" style="color:var(--coral)"></i>Listing CRUD tests + photo upload tests<span class="pts">5</span></div>
+    </div>
+  </div>
+
+  <div class="sprint">
+    <div class="sprint-header" onclick="toggleSprint(this)">
+      <div><span class="badge badge-purple" style="margin-right:8px">Sprint 3</span><h4 style="display:inline">Search, Filter & Discovery — Weeks 5–6</h4></div>
+      <span style="color:var(--muted);font-size:0.8rem">34 pts <i class="ti ti-chevron-down"></i></span>
+    </div>
+    <div class="sprint-body">
+      <div class="story"><i class="ti ti-database" style="color:var(--teal)"></i>PostgreSQL full-text search: tsvector column + gin index<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-search" style="color:var(--accent)"></i>Search bar component with debounced query<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-filter" style="color:var(--accent)"></i>Filter panel: condition multi-select, type toggle, price range<span class="pts">8</span></div>
+      <div class="story"><i class="ti ti-sort-descending" style="color:var(--accent)"></i>Sort options: newest, price asc/desc + URL query params<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-layout-grid" style="color:var(--accent)"></i>Pagination / infinite scroll on listings page<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-category" style="color:var(--accent)"></i>Category browsing page with book counts<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-globe" style="color:var(--accent)"></i>Full Arabic translation + RTL layout pass<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-test-pipe" style="color:var(--coral)"></i>Search relevance + filter combination tests<span class="pts">2</span></div>
+    </div>
+  </div>
+
+  <div class="sprint">
+    <div class="sprint-header" onclick="toggleSprint(this)">
+      <div><span class="badge badge-coral" style="margin-right:8px">Sprint 4</span><h4 style="display:inline">Exchange & Request Flow — Weeks 7–8</h4></div>
+      <span style="color:var(--muted);font-size:0.8rem">40 pts <i class="ti ti-chevron-down"></i></span>
+    </div>
+    <div class="sprint-body">
+      <div class="story"><i class="ti ti-database" style="color:var(--teal)"></i>contact_requests table + request status state machine + RLS<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-message" style="color:var(--accent)"></i>Send contact request modal with message input<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-arrows-exchange" style="color:var(--accent)"></i>Exchange proposal: select from own books UI<span class="pts">8</span></div>
+      <div class="story"><i class="ti ti-inbox" style="color:var(--accent)"></i>Incoming requests page: accept/reject with side effects<span class="pts">8</span></div>
+      <div class="story"><i class="ti ti-send" style="color:var(--accent)"></i>Outgoing requests page: status tracking<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-database" style="color:var(--teal)"></i>transactions table + auto-create on accept<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-bell" style="color:var(--teal)"></i>Supabase Realtime notifications: request events<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-test-pipe" style="color:var(--coral)"></i>Full request flow integration tests<span class="pts">3</span></div>
+    </div>
+  </div>
+
+  <div class="sprint">
+    <div class="sprint-header" onclick="toggleSprint(this)">
+      <div><span class="badge badge-amber" style="margin-right:8px">Sprint 5</span><h4 style="display:inline">Wishlist, History & Admin — Weeks 9–10</h4></div>
+      <span style="color:var(--muted);font-size:0.8rem">35 pts <i class="ti ti-chevron-down"></i></span>
+    </div>
+    <div class="sprint-body">
+      <div class="story"><i class="ti ti-heart" style="color:var(--accent)"></i>Wishlist: save/unsave button + wishlist page<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-bell" style="color:var(--teal)"></i>Wishlist re-availability notification (pg trigger → notify)<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-history" style="color:var(--accent)"></i>Transaction history page with filters<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-lock" style="color:var(--amber)"></i>Admin RBAC middleware + admin-only route protection<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-category" style="color:var(--accent)"></i>Admin: category CRUD management page<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-shield" style="color:var(--accent)"></i>Admin: listings moderation (review, remove, flag)<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-users" style="color:var(--accent)"></i>Admin: user management (view, suspend)<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-test-pipe" style="color:var(--coral)"></i>Admin permission tests + wishlist notification tests<span class="pts">4</span></div>
+    </div>
+  </div>
+
+  <div class="sprint">
+    <div class="sprint-header" onclick="toggleSprint(this)">
+      <div><span class="badge badge-green" style="margin-right:8px">Sprint 6</span><h4 style="display:inline">Analytics, Polish & Launch — Weeks 11–12</h4></div>
+      <span style="color:var(--muted);font-size:0.8rem">36 pts <i class="ti ti-chevron-down"></i></span>
+    </div>
+    <div class="sprint-body">
+      <div class="story"><i class="ti ti-chart-bar" style="color:var(--accent)"></i>Admin analytics dashboard: charts + KPI cards<span class="pts">8</span></div>
+      <div class="story"><i class="ti ti-file-spreadsheet" style="color:var(--accent)"></i>CSV export for analytics data<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-bolt" style="color:var(--amber)"></i>Performance: image lazy loading, ISR pages, Core Web Vitals<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-accessible" style="color:var(--amber)"></i>WCAG 2.1 AA audit + fixes (ARIA, keyboard nav)<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-bug" style="color:var(--coral)"></i>Bug bash + end-to-end Playwright test suite<span class="pts">5</span></div>
+      <div class="story"><i class="ti ti-rocket" style="color:var(--teal)"></i>Production Supabase config, env vars, rate limiting<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-globe" style="color:var(--amber)"></i>Custom domain, Vercel Analytics, error monitoring (Sentry free)<span class="pts">3</span></div>
+      <div class="story"><i class="ti ti-checklist" style="color:var(--green)"></i>Stakeholder demo + launch checklist<span class="pts">4</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MVP ===================== -->
+<div class="section" id="mvp">
+  <div class="sec-header">
+    <span class="badge badge-green">🚀 Phase 9</span>
+    <h2 style="margin-top:8px">Final Working MVP — Tech Stack & Tools</h2>
+    <p>Complete toolchain — every layer of the stack with the best free AI-powered tools.</p>
+  </div>
+
+  <div class="tbl-wrap" style="margin-bottom:1.5rem">
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Why</th><th>Best Free AI Tool</th><th>MCP Server</th></tr></thead>
+      <tbody>
+        <tr><td>Frontend Framework</td><td><span class="inline-code">Next.js 14</span> App Router</td><td>SSR/ISR, file-based routing, Vercel-native, Arabic RTL support</td><td>v0.dev — generates Next.js + Tailwind components</td><td>—</td></tr>
+        <tr><td>Styling</td><td><span class="inline-code">Tailwind CSS</span> + shadcn/ui</td><td>Utility-first, RTL via <span class="inline-code">dir="rtl"</span>, shadcn is copy-paste ready</td><td>Claude — generates Tailwind component code on demand</td><td>claude.ai</td></tr>
+        <tr><td>i18n</td><td><span class="inline-code">next-intl</span></td><td>Best Next.js App Router i18n. Handles RTL locale routing</td><td>Claude — generates translation JSON files for AR/EN</td><td>—</td></tr>
+        <tr><td>Database</td><td><span class="inline-code">Supabase</span> (PostgreSQL)</td><td>Free tier, RLS, full-text search, real-time, Auth built-in</td><td>Supabase AI (built-in) + Claude for SQL</td><td>supabase MCP (official)</td></tr>
+        <tr><td>Authentication</td><td><span class="inline-code">Supabase Auth</span></td><td>Email + SMS OTP, JWT, free tier generous</td><td>Claude — generate auth middleware & RLS policies</td><td>supabase MCP</td></tr>
+        <tr><td>File Storage</td><td><span class="inline-code">Supabase Storage</span></td><td>S3-compatible, CDN, image transforms, free 1GB</td><td>—</td><td>supabase MCP</td></tr>
+        <tr><td>Notifications</td><td><span class="inline-code">Supabase Realtime</span></td><td>Postgres → WebSocket subscriptions, no extra service needed</td><td>Claude — generate subscription hooks</td><td>—</td></tr>
+        <tr><td>Deployment</td><td><span class="inline-code">Vercel</span> (free tier)</td><td>Zero-config Next.js, auto-CI/CD from GitHub, free SSL</td><td>—</td><td>—</td></tr>
+        <tr><td>API Testing</td><td><span class="inline-code">Bruno</span></td><td>Open-source, Git-friendly, team shareable collections</td><td>Claude — generate Bruno collection JSON from API spec</td><td>—</td></tr>
+        <tr><td>E2E Testing</td><td><span class="inline-code">Playwright</span></td><td>Microsoft-backed, fast, free, great for Next.js</td><td>Claude — generate test scenarios from user stories</td><td>—</td></tr>
+        <tr><td>Error Monitoring</td><td><span class="inline-code">Sentry</span> (free tier)</td><td>5k errors/mo free, source maps, performance traces</td><td>—</td><td>sentry MCP (community)</td></tr>
+        <tr><td>Analytics</td><td><span class="inline-code">Vercel Analytics</span></td><td>Zero-config, privacy-friendly, free on hobby plan</td><td>—</td><td>—</td></tr>
+        <tr><td>Project Management</td><td><span class="inline-code">Jira Free</span></td><td>10 users free, Kanban/Scrum, Atlassian ecosystem</td><td>Atlassian Rovo AI — auto-generate issues from text</td><td>mcp.atlassian.com</td></tr>
+        <tr><td>Documentation</td><td><span class="inline-code">Notion</span></td><td>Free, AI-powered, single source of truth for team</td><td>Notion AI — summarize, generate, organize docs</td><td>mcp.notion.com</td></tr>
+        <tr><td>AI Code Assistant</td><td><span class="inline-code">Cursor</span> (free tier)</td><td>VS Code fork with AI autocomplete, chat, codebase Q&A</td><td>Claude-powered inside Cursor</td><td>—</td></tr>
+        <tr><td>AI UI Generator</td><td><span class="inline-code">v0.dev</span></td><td>Prompt → React + Tailwind. Best for rapid screen building</td><td>v0 itself is the AI tool</td><td>—</td></tr>
+        <tr><td>AI Prototype</td><td><span class="inline-code">Bolt.new</span></td><td>Full working app from prompt. Great for demo/stakeholder</td><td>Bolt itself</td><td>—</td></tr>
+        <tr><td>Diagramming</td><td><span class="inline-code">Eraser.io</span></td><td>AI-powered diagram from text, free tier, team-shareable</td><td>Eraser AI</td><td>—</td></tr>
+        <tr><td>DB Diagram</td><td><span class="inline-code">dbdiagram.io</span></td><td>DBML → visual ERD, free, shareable link</td><td>Claude — generates DBML from schema description</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-bottom:1rem;font-size:1rem">🔌 Connected MCP Servers in This Session</h3>
+  <div class="card-grid">
+    <div class="card" style="border-color:rgba(45,212,191,0.3)">
+      <h3><i class="ti ti-brand-notion" style="color:var(--teal)"></i> Notion MCP</h3>
+      <p style="margin-bottom:.75rem">Manage your project wiki, sprint notes, and requirements spec directly from Claude chat.</p>
+      <span class="mcp" style="font-size:0.75rem;color:var(--teal);font-family:monospace">mcp.notion.com/mcp</span>
+      <div style="margin-top:.5rem;font-size:0.8rem;color:var(--muted)">Use for: Requirements doc, sprint retrospectives, team wiki</div>
+    </div>
+    <div class="card" style="border-color:rgba(251,113,133,0.3)">
+      <h3><i class="ti ti-brand-atlassian" style="color:var(--coral)"></i> Atlassian Rovo MCP</h3>
+      <p style="margin-bottom:.75rem">Create Jira issues, update sprints, search Confluence pages — all from Claude.</p>
+      <span class="mcp" style="font-size:0.75rem;color:var(--teal);font-family:monospace">mcp.atlassian.com/v1/mcp</span>
+      <div style="margin-top:.5rem;font-size:0.8rem;color:var(--muted)">Use for: Sprint management, issue tracking, team docs</div>
+    </div>
+    <div class="card" style="border-color:rgba(96,165,250,0.3)">
+      <h3><i class="ti ti-brand-google-drive" style="color:var(--blue)"></i> Google Drive MCP</h3>
+      <p style="margin-bottom:.75rem">Store and retrieve project documents, design files, and specs from Drive.</p>
+      <span class="mcp" style="font-size:0.75rem;color:var(--teal);font-family:monospace">drivemcp.googleapis.com/mcp/v1</span>
+      <div style="margin-top:.5rem;font-size:0.8rem;color:var(--muted)">Use for: Stakeholder docs, design assets, meeting notes</div>
+    </div>
+    <div class="card" style="border-color:rgba(74,222,128,0.3)">
+      <h3><i class="ti ti-calendar" style="color:var(--green)"></i> Google Calendar MCP</h3>
+      <p style="margin-bottom:.75rem">Schedule sprint ceremonies, planning sessions, and demos directly from Claude.</p>
+      <span class="mcp" style="font-size:0.75rem;color:var(--teal);font-family:monospace">calendarmcp.googleapis.com/mcp/v1</span>
+      <div style="margin-top:.5rem;font-size:0.8rem;color:var(--muted)">Use for: Sprint calendar, standup scheduling, release dates</div>
+    </div>
+    <div class="card" style="border-color:rgba(251,191,36,0.3)">
+      <h3><i class="ti ti-git-branch" style="color:var(--amber)"></i> n8n MCP</h3>
+      <p style="margin-bottom:.75rem">Automate workflows: auto-create Jira issues from Notion pages, send notifications on deploys.</p>
+      <span class="mcp" style="font-size:0.75rem;color:var(--teal);font-family:monospace">exology.app.n8n.cloud/mcp-server/http</span>
+      <div style="margin-top:.5rem;font-size:0.8rem;color:var(--muted)">Use for: CI/CD notifications, issue automation, reporting</div>
+    </div>
+    <div class="card" style="border-color:rgba(192,132,252,0.3)">
+      <h3><i class="ti ti-cpu" style="color:var(--purple)"></i> Hugging Face MCP</h3>
+      <p style="margin-bottom:.75rem">Access free AI models: ISBN→book data lookup, image classification for book covers.</p>
+      <span class="mcp" style="font-size:0.75rem;color:var(--teal);font-family:monospace">huggingface.co/mcp</span>
+      <div style="margin-top:.5rem;font-size:0.8rem;color:var(--muted)">Use for: Book cover tagging, ISBN OCR, future recommendations</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="card" style="border-color:rgba(108,126,255,0.3)">
+    <h3 style="margin-bottom:1rem"><i class="ti ti-rocket" style="color:var(--accent)"></i> MVP Launch Checklist</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:0.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">✅ Pre-Launch</div>
+        <div class="ac-item" style="font-size:0.8rem">All 17 functional requirements tested</div>
+        <div class="ac-item" style="font-size:0.8rem">Arabic RTL verified on real device</div>
+        <div class="ac-item" style="font-size:0.8rem">Mobile responsiveness audit passed</div>
+        <div class="ac-item" style="font-size:0.8rem">Supabase RLS policies reviewed</div>
+        <div class="ac-item" style="font-size:0.8rem">Core Web Vitals: LCP &lt;2.5s, CLS &lt;0.1</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:0.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">🔒 Security</div>
+        <div class="ac-item" style="font-size:0.8rem">Rate limiting on contact requests</div>
+        <div class="ac-item" style="font-size:0.8rem">File upload validation (type + size)</div>
+        <div class="ac-item" style="font-size:0.8rem">HTTPS enforced, HSTS header set</div>
+        <div class="ac-item" style="font-size:0.8rem">Admin routes require admin role JWT</div>
+        <div class="ac-item" style="font-size:0.8rem">Env vars secured in Vercel dashboard</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:0.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">🚀 Go Live</div>
+        <div class="ac-item" style="font-size:0.8rem">Custom domain connected + SSL</div>
+        <div class="ac-item" style="font-size:0.8rem">Sentry error monitoring active</div>
+        <div class="ac-item" style="font-size:0.8rem">Vercel Analytics enabled</div>
+        <div class="ac-item" style="font-size:0.8rem">Seed data: 20+ categories, 5+ test listings</div>
+        <div class="ac-item" style="font-size:0.8rem">User feedback form / bug report link live</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleEp(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+function toggleSprint(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.style.display !== 'none' && body.style.display !== '';
+  if(body.style.display === '' || body.style.display === 'grid') {
+    body.style.display = 'none';
+  } else {
+    body.style.display = 'grid';
+  }
+}
+</script>
+</body>
+</html>

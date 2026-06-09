@@ -1,0 +1,16 @@
+🎯 Idea to prototype hackathon
+You can use any AI tool that helps you in building your project
+
+📖 Vision Document
+📑 Requirements Specification
+👥 User Stories
+🔄 Use Case Diagram
+🗄 ERD (Database Design)
+🌐 API Documentation
+🎨 Wireframes
+📊 Sprint Plan
+🚀 Final Working MVP
+Reference from your tool
+
+
+

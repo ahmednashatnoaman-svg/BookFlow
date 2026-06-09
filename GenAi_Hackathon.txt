@@ -1,0 +1,121 @@
+3 - Peer-to-Peer Book Exchange System
+Overview A web platform where users can sell or exchange used books with others in a simple,
+chat-free marketplace.
+User Roles
+●​ Guest — browses listings and searches books without creating an account
+●​ Registered User — lists books for sale or exchange, sends contact requests, and
+manages transactions
+●​ Admin — manages the platform, moderates listings and users, and configures
+categories
+Core Features per Role
+Guest
+●​
+●​
+●​
+●​
+
+Browse all book listings without login
+Search and filter books by title, author, category, condition, or price range
+View book details (description, condition, listing type, owner profile preview)
+Prompted to register to contact a seller or propose an exchange
+
+Registered User
+●​
+●​
+●​
+●​
+●​
+●​
+●​
+●​
+●​
+●​
+●​
+
+Register / login (email or phone number)
+Add a book listing with title, author, category, condition, photos, and description
+Set listing type per book: For Sale (fixed price) or For Exchange (swap offer)
+Edit or delete own listings
+Mark a listing as sold, exchanged, or unavailable
+Search and filter all books
+Send a contact request to a seller (no chat — simple request with a message)
+Propose an exchange by selecting one of their own listed books as the swap offer
+View and manage incoming and outgoing requests (accept / reject)
+Track transaction history (completed sales and exchanges)
+Save books to wishlist
+
+Admin
+●​
+●​
+●​
+●​
+
+Create and manage book categories
+Moderate listings (review, edit, or remove inappropriate content)
+Manage user accounts (view, suspend, or remove)
+View platform analytics (total listings, active users, exchange volume, popular
+categories)
+●​ Configure platform settings (listing rules, image limits)
+Core Features
+
+Listings
+●​
+●​
+●​
+●​
+●​
+
+Full CRUD for book listings
+Condition grading (new / good / acceptable / poor)
+Photos upload per listing
+Listing type: for sale or for exchange
+Listing status: available / sold / exchanged / unavailable
+
+Search & Filter
+●​ Search by title, author, or category
+●​ Filter by condition, listing type, or price range
+●​ Sort by newest or most relevant
+Exchange & Purchase Requests
+●​
+●​
+●​
+●​
+●​
+
+Registered user sends a contact request with an optional message
+For exchange: user selects one of their own listed books as the swap offer
+Request status flow: pending → accepted / rejected
+Requester notified on status change
+No real-time chat — communication handled via contact request message only
+
+Wishlist
+●​ Save any listing to a personal wishlist
+●​ Get notified if a wishlisted book becomes available again
+Transaction History
+●​ View completed sales and exchanges
+●​ Basic record: book title, other party, date, type (sale or exchange)
+Dashboard & Reports (Admin)
+●​
+●​
+●​
+●​
+
+Total listings and active users
+Exchange volume per category
+Most listed or requested books
+Reported or flagged listings
+
+Shared Core Features
+●​
+●​
+●​
+●​
+●​
+
+Authentication & role-based access control (RBAC)
+Notification service — contact requests, exchange proposals, and listing activity
+Search and filtering engine
+Reporting and moderation module
+Responsive web UI (works on mobile browser without a native app)
+
+●​ Arabic & English language support

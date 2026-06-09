@@ -1,0 +1,24 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@bookflow_supabase_url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@bookflow_supabase_anon_key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@bookflow_supabase_service_role",
+    "ANTHROPIC_API_KEY": "@bookflow_anthropic_key",
+    "OPENAI_API_KEY": "@bookflow_openai_key",
+    "AI_SERVICE_URL": "@bookflow_ai_service_url",
+    "AI_SERVICE_SECRET": "@bookflow_ai_service_secret",
+    "GOOGLE_BOOKS_API_KEY": "@bookflow_google_books_key"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    }
+  ]
+}

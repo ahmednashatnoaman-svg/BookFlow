@@ -1,0 +1,62 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Next.js build output
+.next/
+out/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Environmental variables & credentials (local files only, not example templates)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
+.env.production
+*.key
+*.pem
+credentials.json
+client_secret*.json
+
+# OS files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# Python virtual environments (root level or specified sub-environments only)
+venv/
+.venv/
+env/
+ENV/
+pyvenv.cfg
+
+# Python cache and packages
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+.poetry/
+.pipenv/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# AI Agent / Claude local folders and metadata
+.claude/
+.gemini/
+.gpts/
+.copilot/
+antigravity/
+.antigravity/
+artifacts/
