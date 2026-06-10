@@ -16,7 +16,7 @@
 
 ---
 
-**[🚀 Live Demo](https://bookflow.vercel.app)** · **[📖 Docs](#-documentation-hub)** · **[🏗 Architecture](#-system-architecture)** · **[🗄 ERD](#-erd--database-design)** · **[🎨 Wireframes](#-wireframes)** · **[📓 NotebookLM Presentation](#-notebooklm-presentation)** · **[📊 Sprint Plan](#-sprint-plan)**
+**[🚀 Live Demo](https://book-flow-umber.vercel.app)** · **[📖 Docs](#-documentation-hub)** · **[🏗 Architecture](#-system-architecture)** · **[🗄 ERD](#-erd--database-design)** · **[🎨 Wireframes](#-wireframes)** · **[📓 NotebookLM Presentation](#-notebooklm-presentation)** · **[📊 Sprint Plan](#-sprint-plan)**
 
 </div>
 

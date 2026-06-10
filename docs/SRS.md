@@ -390,7 +390,7 @@ Collaborative Filtering Flow:
 ## 7. API Documentation
 
 ### Base URL
-- **Production**: `https://bookflow.vercel.app/api`
+- **Production**: `https://book-flow-umber.vercel.app/api`
 - **Development**: `http://localhost:3000/api`
 - **AI Service**: `https://bookflow-ai.railway.app`
 

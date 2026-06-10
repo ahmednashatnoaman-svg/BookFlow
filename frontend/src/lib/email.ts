@@ -5,7 +5,7 @@ function getResend() {
   return new Resend(process.env.RESEND_API_KEY!);
 }
 const FROM = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://bookflow.vercel.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://book-flow-umber.vercel.app';
 
 function wrap(content: string) {
   return `<!DOCTYPE html>
@@ -39,7 +39,7 @@ function wrap(content: string) {
     </div>
     <div class="body">${content}</div>
     <div class="footer">
-      <p>BookFlow · <a href="${APP_URL}">bookflow.vercel.app</a></p>
+      <p>BookFlow · <a href="${APP_URL}">book-flow-umber.vercel.app</a></p>
       <p style="margin-top:6px">You're receiving this because you have an account on BookFlow.</p>
     </div>
   </div>
