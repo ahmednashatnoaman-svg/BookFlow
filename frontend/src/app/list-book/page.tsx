@@ -28,7 +28,7 @@ export default function ListBookPage() {
   });
 
   useEffect(() => {
-    categoriesApi.list().then(setCategories).catch(() => {});
+    categoriesApi.list().then(setCategories).catch(() => { });
   }, []);
 
   const handleISBNData = (data: Partial<BookListing>) => {
@@ -148,20 +148,20 @@ export default function ListBookPage() {
           <div className="glass-card p-4 space-y-4">
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'عنوان الكتاب *' : 'Book Title *'}</label>
-              <input value={form.title} onChange={e => setForm(p => ({...p, title: e.target.value}))} required className={inputClass} />
+              <input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required className={inputClass} />
             </div>
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'المؤلف *' : 'Author *'}</label>
-              <input value={form.author} onChange={e => setForm(p => ({...p, author: e.target.value}))} required className={inputClass} />
+              <input value={form.author} onChange={e => setForm(p => ({ ...p, author: e.target.value }))} required className={inputClass} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'الناشر' : 'Publisher'}</label>
-                <input value={form.publisher} onChange={e => setForm(p => ({...p, publisher: e.target.value}))} className={inputClass} />
+                <input value={form.publisher} onChange={e => setForm(p => ({ ...p, publisher: e.target.value }))} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'سنة النشر' : 'Year'}</label>
-                <input type="number" value={form.published_year} onChange={e => setForm(p => ({...p, published_year: e.target.value}))} className={inputClass} min="1800" max={new Date().getFullYear()} />
+                <input type="number" value={form.published_year} onChange={e => setForm(p => ({ ...p, published_year: e.target.value }))} className={inputClass} min="1800" max={new Date().getFullYear()} />
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ export default function ListBookPage() {
           <div className="glass-card p-4 space-y-4">
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'الفئة *' : 'Category *'}</label>
-              <select value={form.category_id} onChange={e => setForm(p => ({...p, category_id: e.target.value}))} required className={inputClass}>
+              <select value={form.category_id} onChange={e => setForm(p => ({ ...p, category_id: e.target.value }))} required className={inputClass}>
                 <option value="">{locale === 'ar' ? 'اختر فئة' : 'Select category'}</option>
                 {categories.map(cat => (
                   <option key={cat.id} value={cat.id}>{cat.icon} {cat[`name_${locale}`]}</option>
@@ -180,15 +180,15 @@ export default function ListBookPage() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'الحالة *' : 'Condition *'}</label>
-                <select value={form.condition} onChange={e => setForm(p => ({...p, condition: e.target.value as BookCondition}))} className={inputClass}>
-                  {(['new','good','acceptable','poor'] as BookCondition[]).map(c => (
+                <select value={form.condition} onChange={e => setForm(p => ({ ...p, condition: e.target.value as BookCondition }))} className={inputClass}>
+                  {(['new', 'good', 'acceptable', 'poor'] as BookCondition[]).map(c => (
                     <option key={c} value={c}>{c === 'new' ? (locale === 'ar' ? 'جديد' : 'New') : c === 'good' ? (locale === 'ar' ? 'جيد' : 'Good') : c === 'acceptable' ? (locale === 'ar' ? 'مقبول' : 'Acceptable') : (locale === 'ar' ? 'سيء' : 'Poor')}</option>
                   ))}
                 </select>
               </div>
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'نوع الإعلان *' : 'Listing Type *'}</label>
-                <select value={form.listing_type} onChange={e => setForm(p => ({...p, listing_type: e.target.value as ListingType}))} className={inputClass}>
+                <select value={form.listing_type} onChange={e => setForm(p => ({ ...p, listing_type: e.target.value as ListingType }))} className={inputClass}>
                   <option value="sale">{locale === 'ar' ? 'للبيع' : 'For Sale'}</option>
                   <option value="exchange">{locale === 'ar' ? 'للتبادل' : 'For Exchange'}</option>
                 </select>
@@ -197,7 +197,7 @@ export default function ListBookPage() {
             {form.listing_type === 'sale' && (
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'السعر (ريال)' : 'Price (SAR)'}</label>
-                <input type="number" value={form.price} onChange={e => setForm(p => ({...p, price: e.target.value}))} className={inputClass} min="0" step="0.5" />
+                <input type="number" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} className={inputClass} min="0" step="0.5" />
               </div>
             )}
           </div>
@@ -206,16 +206,16 @@ export default function ListBookPage() {
           <div className="glass-card p-4 space-y-4">
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'الوصف' : 'Description'}</label>
-              <textarea value={form.description} onChange={e => setForm(p => ({...p, description: e.target.value}))} rows={4} className={cn(inputClass, 'resize-none')} />
+              <textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={4} className={cn(inputClass, 'resize-none')} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'المدينة' : 'City'}</label>
-                <input value={form.city} onChange={e => setForm(p => ({...p, city: e.target.value}))} className={inputClass} />
+                <input value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'اللغة' : 'Language'}</label>
-                <select value={form.language} onChange={e => setForm(p => ({...p, language: e.target.value}))} className={inputClass}>
+                <select value={form.language} onChange={e => setForm(p => ({ ...p, language: e.target.value }))} className={inputClass}>
                   <option value="en">English</option>
                   <option value="ar">العربية</option>
                 </select>

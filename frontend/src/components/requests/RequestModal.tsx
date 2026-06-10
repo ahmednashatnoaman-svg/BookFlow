@@ -189,6 +189,7 @@ export default function RequestModal({ book, userId, locale }: RequestModalProps
                 {/* Target book preview */}
                 <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl border border-border/50">
                   {book.cover_image ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={book.cover_image} alt={book.title} className="w-10 h-12 rounded object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-10 h-12 rounded bg-muted/60 flex-shrink-0 flex items-center justify-center">
@@ -224,6 +225,7 @@ export default function RequestModal({ book, userId, locale }: RequestModalProps
                             )}
                           >
                             {b.cover_image ? (
+                              /* eslint-disable-next-line @next/next/no-img-element */
                               <img src={b.cover_image} alt={b.title} className="w-8 h-10 rounded object-cover flex-shrink-0" />
                             ) : (
                               <div className="w-8 h-10 rounded bg-muted/60 flex-shrink-0" />

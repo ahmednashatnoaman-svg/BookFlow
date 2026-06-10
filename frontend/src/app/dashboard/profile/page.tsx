@@ -76,7 +76,7 @@ export default function ProfilePage() {
       setLoading(false);
     };
     load();
-  }, []);
+  }, [supabase, router]);
 
   const handleSave = async () => {
     if (!profile) return;

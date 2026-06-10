@@ -55,7 +55,7 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
       toast.error('Listing not found');
       router.push('/dashboard/listings');
     });
-  }, [id]);
+  }, [id, router]);
 
   const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);

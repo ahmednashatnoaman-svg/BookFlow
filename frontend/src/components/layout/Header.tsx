@@ -41,7 +41,7 @@ export default function Header() {
     getUser();
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => getUser());
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabase]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();

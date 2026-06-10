@@ -58,7 +58,7 @@ export default function WishlistPage() {
             </div>
             <div>
               <p className="font-semibold">Your wishlist is empty</p>
-              <p className="text-sm text-muted-foreground mt-1">Save books you're interested in by clicking the heart icon</p>
+              <p className="text-sm text-muted-foreground mt-1">Save books you&apos;re interested in by clicking the heart icon</p>
             </div>
             <Link href="/books"
               className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors"

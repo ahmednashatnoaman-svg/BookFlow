@@ -112,7 +112,7 @@ export default function NotificationDrawer() {
 
       return () => { supabase.removeChannel(channel); };
     });
-  }, []);
+  }, [supabase]);
 
   // Close on outside click
   useEffect(() => {
