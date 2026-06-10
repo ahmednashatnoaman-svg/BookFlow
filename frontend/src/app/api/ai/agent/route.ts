@@ -101,6 +101,9 @@ async function runGroqAgent(messages: Groq.Chat.ChatCompletionMessageParam[], lo
   // Detect Arabic from last user message OR locale
   const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
   const isArabic = locale === 'ar' || (lastUserMsg && typeof lastUserMsg.content === 'string' && containsArabic(lastUserMsg.content));
+  const fallbackMsg = isArabic
+    ? 'عذراً، واجهت مشكلة مؤقتة. يرجى المحاولة مرة أخرى.'
+    : 'Sorry, I\'m experiencing a temporary issue. Please try again in a moment.';
 
   let systemMsg = SYSTEM_PROMPT;
   if (isArabic) {
@@ -158,7 +161,7 @@ IMPORTANT — Arabic mode:
       console.warn(`Groq model ${model} failed:`, err);
     }
   }
-  throw new Error('All Groq models failed');
+  return { finalText: fallbackMsg, foundBooks: [] };
 }
 
 export async function POST(request: NextRequest) {
@@ -186,6 +189,6 @@ export async function POST(request: NextRequest) {
   } catch (e: unknown) {
     const err = e as Error;
     console.error('AI agent error:', err);
-    return NextResponse.json({ error: err.message ?? 'Internal error' }, { status: 500 });
+    return NextResponse.json({ response: 'Sorry, I encountered an issue. Please try again.', books: [] });
   }
 }

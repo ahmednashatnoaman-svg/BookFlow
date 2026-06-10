@@ -16,24 +16,57 @@ export async function POST(request: NextRequest) {
   const { listing_id, offer_listing_id, message } = body;
   if (!listing_id) return genericError('listing_id is required');
 
-  // Use service-role for the atomic create_contact_request RPC
-  // This function handles validation + notification atomically
-  const admin = await createAdminClient();
-  const { data, error } = await admin.rpc('create_contact_request', {
-    p_listing_id: listing_id,
-    p_offer_listing_id: offer_listing_id ?? null,
-    p_message: message?.trim() ?? null,
-  });
+  // Validate listing exists, is available, and isn't owned by requester
+  const { data: listing, error: listingError } = await supabase
+    .from('book_listings')
+    .select('id, user_id, title, status')
+    .eq('id', listing_id)
+    .single();
 
-  if (error) {
-    const msg = error.message.toLowerCase();
-    if (msg.includes('not found') || msg.includes('unavailable')) return genericError('This listing is no longer available', 404);
-    if (msg.includes('own listing')) return genericError('You cannot request your own listing', 400);
-    if (msg.includes('already have a pending')) return genericError('You already have a pending request for this listing', 409);
+  if (listingError || !listing) return genericError('This listing is no longer available', 404);
+  if (listing.status !== 'available') return genericError('This listing is no longer available', 404);
+  if (listing.user_id === user.id) return genericError('You cannot request your own listing', 400);
+
+  // Check for existing pending request
+  const { data: existing } = await supabase
+    .from('book_requests')
+    .select('id')
+    .eq('listing_id', listing_id)
+    .eq('requester_id', user.id)
+    .eq('status', 'pending')
+    .maybeSingle();
+
+  if (existing) return genericError('You already have a pending request for this listing', 409);
+
+  // Insert request and notification using service role to bypass RLS
+  const admin = await createAdminClient();
+  const { data: newRequest, error: requestError } = await admin
+    .from('book_requests')
+    .insert({
+      listing_id,
+      requester_id: user.id,
+      offer_listing_id: offer_listing_id ?? null,
+      message: message?.trim() ?? null,
+      status: 'pending',
+    })
+    .select()
+    .single();
+
+  if (requestError) {
+    if (requestError.code === '23505') return genericError('You already have a pending request for this listing', 409);
     return genericError('Failed to send request. Please try again.', 400);
   }
 
-  return NextResponse.json(data, { status: 201 });
+  // Notify listing owner (fire-and-forget — don't fail the request if this errors)
+  admin.from('notifications').insert({
+    user_id: listing.user_id,
+    type: 'request_received',
+    title: 'New Request for Your Book',
+    body: `Someone is interested in "${listing.title}"`,
+    data: { request_id: newRequest.id, listing_id, requester_id: user.id },
+  }).then(() => {}).catch(() => {});
+
+  return NextResponse.json(newRequest, { status: 201 });
 }
 
 export async function GET(request: NextRequest) {
@@ -47,6 +80,18 @@ export async function GET(request: NextRequest) {
   const limit = Math.min(50, parseInt(searchParams.get('limit') ?? '20'));
   const offset = (page - 1) * limit;
 
+  let listingIds: string[] = [];
+  if (type === 'received') {
+    const { data: owned } = await supabase
+      .from('book_listings')
+      .select('id')
+      .eq('user_id', user.id);
+    listingIds = owned?.map(l => l.id) ?? [];
+    if (listingIds.length === 0) {
+      return NextResponse.json({ data: [], total: 0, page, per_page: limit });
+    }
+  }
+
   let query = supabase
     .from('book_requests')
     .select(`
@@ -59,7 +104,7 @@ export async function GET(request: NextRequest) {
     .range(offset, offset + limit - 1);
 
   if (type === 'received') {
-    query = query.eq('listing.user_id', user.id);
+    query = query.in('listing_id', listingIds);
   } else {
     query = query.eq('requester_id', user.id);
   }
