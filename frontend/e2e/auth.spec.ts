@@ -7,8 +7,8 @@ const testPassword = 'TestPass123!';
 test.describe('Authentication flow', () => {
   test('landing page loads', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByText('BookFlow')).toBeVisible();
-    await expect(page.getByText('Browse Books')).toBeVisible();
+    await expect(page.getByRole('banner').getByText('BookFlow')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Browse Books' }).first()).toBeVisible();
   });
 
   test('register page renders', async ({ page }) => {
@@ -42,12 +42,13 @@ test.describe('Authentication flow', () => {
 
   test('password mismatch shows error on register', async ({ page }) => {
     await page.goto('/auth/register');
+    await page.waitForTimeout(1000);
     await page.fill('input[autocomplete="name"]', 'Test User');
     await page.fill('input[type="email"]', testEmail);
     await page.fill('input[autocomplete="new-password"]', 'password123');
     await page.locator('input[autocomplete="new-password"]').last().fill('differentpass');
     await page.getByRole('button', { name: /create account/i }).click();
-    // Should show error toast
-    await expect(page.getByText(/passwords do not match/i)).toBeVisible({ timeout: 5000 });
+    // Should show error toast (supports English and Arabic)
+    await expect(page.getByText(/passwords do not match|كلمتا المرور غير متطابقتين/i)).toBeVisible({ timeout: 5000 });
   });
 });

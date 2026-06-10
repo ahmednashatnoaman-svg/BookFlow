@@ -110,6 +110,9 @@ export default function Header() {
               {isArabic ? 'EN' : 'عربي'}
             </button>
 
+            {/* Notifications */}
+            <NotificationDrawer />
+
             {user ? (
               <>
                 {/* List a book */}
@@ -119,9 +122,6 @@ export default function Header() {
                   <Plus className="w-3.5 h-3.5" />
                   {t('list')}
                 </Link>
-
-                {/* Notifications */}
-                <NotificationDrawer />
 
                 {/* Profile dropdown */}
                 <div className="relative">

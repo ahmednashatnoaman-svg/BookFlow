@@ -25,6 +25,7 @@ test.describe('Dashboard (requires auth)', () => {
 
   test('admin login rejects non-admin credentials', async ({ page }) => {
     await page.goto('/admin/login');
+    await page.waitForTimeout(1000);
     await page.fill('input[type="email"]', 'notadmin@example.com');
     await page.fill('input[type="password"]', 'wrongpassword');
     await page.getByRole('button', { name: /sign in/i }).click();
