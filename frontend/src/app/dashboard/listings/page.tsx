@@ -177,6 +177,7 @@ export default function MyListingsPage() {
                         value={book.status}
                         onChange={e => handleStatusChange(book.id, e.target.value as ListingStatus)}
                         disabled={updatingStatus === book.id}
+                        aria-label="Change status"
                         className="text-xs bg-muted/40 border border-border rounded-lg px-2 py-1.5 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
                       >
                         {STATUS_OPTIONS.map(s => (
@@ -186,6 +187,7 @@ export default function MyListingsPage() {
                     )}
 
                     <Link href={`/dashboard/listings/${book.id}/edit`}
+                      aria-label="Edit listing"
                       className="p-2 hover:bg-muted/50 rounded-lg transition-colors text-muted-foreground hover:text-foreground"
                     >
                       <Edit2 className="w-4 h-4" />
@@ -195,6 +197,7 @@ export default function MyListingsPage() {
                       type="button"
                       onClick={() => handleDelete(book.id)}
                       disabled={deleting === book.id}
+                      aria-label="Delete listing"
                       className="p-2 hover:bg-destructive/10 rounded-lg transition-colors text-muted-foreground hover:text-destructive"
                     >
                       {deleting === book.id
