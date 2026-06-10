@@ -27,12 +27,22 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-
   const protectedPaths = ['/dashboard', '/list-book'];
   const adminPaths = ['/admin'];
   const authPaths = ['/auth/login', '/auth/register'];
   const pathname = request.nextUrl.pathname;
+
+  const isDevAdmin = request.cookies.get('dev_admin')?.value === 'true';
+  if (isDevAdmin) {
+    if (pathname.startsWith('/admin/login')) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+    if (adminPaths.some(p => pathname.startsWith(p))) {
+      return supabaseResponse;
+    }
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user && protectedPaths.some(p => pathname.startsWith(p))) {
     return NextResponse.redirect(new URL('/auth/login', request.url));

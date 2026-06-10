@@ -44,6 +44,7 @@ export default function Header() {
   }, [supabase]);
 
   const handleSignOut = async () => {
+    document.cookie = "dev_admin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     await supabase.auth.signOut();
     setUser(null);
     setMobileOpen(false);
