@@ -16,7 +16,7 @@
 
 ---
 
-**[🚀 Live Demo](https://bookflow.vercel.app)** · **[📖 Docs](#-documentation-hub)** · **[🗄 ERD](#-erd--database-design)** · **[🎨 Wireframes](#-wireframes)** · **[📓 NotebookLM Presentation](#-notebooklm-presentation)** · **[📊 Sprint Plan](#-sprint-plan)**
+**[🚀 Live Demo](https://bookflow.vercel.app)** · **[📖 Docs](#-documentation-hub)** · **[🏗 Architecture](#-system-architecture)** · **[🗄 ERD](#-erd--database-design)** · **[🎨 Wireframes](#-wireframes)** · **[📓 NotebookLM Presentation](#-notebooklm-presentation)** · **[📊 Sprint Plan](#-sprint-plan)**
 
 </div>
 
@@ -133,6 +133,15 @@ The system serves three actor roles: **Guest**, **Authenticated User**, and **Ad
 
 ---
 
+## 🏗 System Architecture
+
+BookFlow uses a three-tier architecture connecting the Next.js frontend, Supabase database, and a FastAPI AI microservice. Detailed architectural representations and sequence flows can be explored in our interactive workspace:
+
+* 🏗 **System Architecture Diagram →** [View on Eraser](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr?origin=share)
+* 🔄 **Data Flow & Sequence Diagram →** [View on Eraser](https://app.eraser.io/workspace/SJoBG0TvkyDePQOqICpP?origin=share)
+
+---
+
 ## 🗄 ERD — Database Design
 
 **10 tables** across 5 functional domains, all in PostgreSQL 16 with Row Level Security.
@@ -204,7 +213,7 @@ The system serves three actor roles: **Guest**, **Authenticated User**, and **Ad
 - Notification types enforced by CHECK constraint across 10 event types
 - Full RBAC via `role_permissions` table + `has_permission()` helper
 
-> 🎨 **Interactive Miro ERD →** [View full diagram on Miro](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318)
+> 🎨 **Interactive Miro ERD →** [View full diagram on Miro](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318) · **Eraser DB Diagram →** [View Schema on Eraser](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share)
 >
 > 📂 **Migrations →** [supabase/migrations/](supabase/migrations/) (7 migration files, 001–007)
 
@@ -386,10 +395,10 @@ BookFlow/
 | 📑 Requirements | [docs/requirements-specification.md](docs/requirements-specification.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) | — |
 | 👥 User Stories | [docs/user-stories.md](docs/user-stories.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [CF Epic](https://iti46medical.atlassian.net/browse/CF-120) |
 | 🔄 Use Case Diagram | — | — | — | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/) |
-| 🗄 ERD | [supabase/migrations/](supabase/migrations/) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Miro ERD](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318) |
+| 🗄 ERD | [supabase/migrations/](supabase/migrations/) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Miro ERD](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318) / [Eraser DB Schema](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share) |
 | 🌐 API Docs | [docs/api-documentation.md](docs/api-documentation.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | — |
 | 🎨 Wireframes | — | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Stitch Project](https://stitch.withgoogle.com/projects/4122066542971601180) |
-| 🏗 System Architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | — | — | [Eraser Diagram](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr) |
+| 🏗 System Architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | — | — | [Eraser Diagram](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr?origin=share) / [Eraser Workflow](https://app.eraser.io/workspace/SJoBG0TvkyDePQOqICpP?origin=share) |
 | 📓 Presentation Slides | — | — | — | [NotebookLM Presentation](https://notebooklm.google.com/notebook/b87b9029-6d99-477c-8818-4176af814a26/artifact/8353f781-dd2b-4bc4-97c0-875f4ef50f26?utm_source=nlmm_share) |
 | 📊 Sprint Plan | [docs/sprint-plan.md](docs/sprint-plan.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [CF-120](https://iti46medical.atlassian.net/browse/CF-120) |
 | 🚀 MVP | This README | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence Hub](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) | — |
