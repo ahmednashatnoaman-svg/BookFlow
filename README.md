@@ -16,7 +16,7 @@
 
 ---
 
-**[🚀 Live Demo](#-live-demo)** · **[📖 Docs](#-documentation-hub)** · **[🗄 ERD](#-erd--database-design)** · **[🎨 Wireframes](#-wireframes)** · **[📊 Sprint Plan](#-sprint-plan)**
+**[🚀 Live Demo](https://bookflow.vercel.app)** · **[📖 Docs](#-documentation-hub)** · **[🗄 ERD](#-erd--database-design)** · **[🎨 Wireframes](#-wireframes)** · **[📓 NotebookLM Presentation](#-notebooklm-presentation)** · **[📊 Sprint Plan](#-sprint-plan)**
 
 </div>
 
@@ -275,6 +275,14 @@ Designed in **Google Stitch** — AI-generated UI screens matching the BookFlow 
 
 ---
 
+## 📓 NotebookLM Presentation
+
+An interactive AI-generated audio/text presentation of BookFlow was created using Google NotebookLM. It offers a structured walkthrough of the project vision, hackathon milestones, architecture, and core features.
+
+> 📓 **NotebookLM Presentation & Artifacts →** [View NotebookLM Presentation](https://notebooklm.google.com/notebook/b87b9029-6d99-477c-8818-4176af814a26/artifact/8353f781-dd2b-4bc4-97c0-875f4ef50f26?utm_source=nlmm_share)
+
+---
+
 ## 📊 Sprint Plan
 
 **Sprint Duration:** 7 days · **Epic:** [CF-120](https://iti46medical.atlassian.net/browse/CF-120) — BookFlow GenAI Hackathon
@@ -372,15 +380,17 @@ BookFlow/
 
 ## 📚 Documentation Hub
 
-| Document | Local | Notion | Confluence | Jira |
-|----------|-------|--------|-----------|------|
+| Document | Local | Notion | Confluence | Jira / Tools |
+|----------|-------|--------|-----------|--------------|
 | 📖 Vision Document | [docs/vision-document.md](docs/vision-document.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence](https://iti46medical.atlassian.net/wiki/x/AgBNAQ) | — |
 | 📑 Requirements | [docs/requirements-specification.md](docs/requirements-specification.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) | — |
 | 👥 User Stories | [docs/user-stories.md](docs/user-stories.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [CF Epic](https://iti46medical.atlassian.net/browse/CF-120) |
 | 🔄 Use Case Diagram | — | — | — | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/) |
 | 🗄 ERD | [supabase/migrations/](supabase/migrations/) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Miro ERD](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318) |
 | 🌐 API Docs | [docs/api-documentation.md](docs/api-documentation.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | — |
-| 🎨 Wireframes | — | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Stitch](https://stitch.google.com) |
+| 🎨 Wireframes | — | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Stitch Project](https://stitch.google.com) |
+| 🏗 System Architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | — | — | [Eraser Diagram](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr) |
+| 📓 Presentation Slides | — | — | — | [NotebookLM Presentation](https://notebooklm.google.com/notebook/b87b9029-6d99-477c-8818-4176af814a26/artifact/8353f781-dd2b-4bc4-97c0-875f4ef50f26?utm_source=nlmm_share) |
 | 📊 Sprint Plan | [docs/sprint-plan.md](docs/sprint-plan.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [CF-120](https://iti46medical.atlassian.net/browse/CF-120) |
 | 🚀 MVP | This README | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence Hub](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) | — |
 
