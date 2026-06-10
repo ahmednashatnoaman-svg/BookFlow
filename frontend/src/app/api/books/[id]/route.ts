@@ -39,7 +39,12 @@ export async function PATCH(request: NextRequest, { params }: Params) {
                    'published_year', 'status'];
   const sanitized: Record<string, unknown> = {};
   for (const key of allowed) {
-    if (body[key] !== undefined) sanitized[key] = body[key];
+    const val = body[key];
+    if (val === undefined) continue;
+    // Empty strings are invalid for UUID columns; skip them so the DB value is preserved
+    if (val === '' && (key === 'category_id')) continue;
+    // Convert other empty strings to null to clear nullable text fields
+    sanitized[key] = val === '' ? null : val;
   }
 
   if (Object.keys(sanitized).length === 0) return err('No valid fields to update');
@@ -53,9 +58,11 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     .single();
 
   if (error) {
-    const msg = error.message.toLowerCase();
-    if (msg.includes('0 rows') || msg.includes('not found')) return err('Listing not found or you do not have permission', 404);
-    return err('Failed to update listing. Please try again.', 400);
+    // PGRST116 = 0 rows returned from .single() — listing not found or user doesn't own it
+    if ((error as { code?: string }).code === 'PGRST116') {
+      return err('Listing not found or you do not have permission', 404);
+    }
+    return err(error.message || 'Failed to update listing. Please try again.', 400);
   }
 
   return NextResponse.json(data);

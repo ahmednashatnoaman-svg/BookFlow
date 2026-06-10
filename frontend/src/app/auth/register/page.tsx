@@ -66,7 +66,10 @@ function RegisterForm() {
     const { error } = await supabase.auth.signUp({
       email: emailForm.email,
       password: emailForm.password,
-      options: { data: { full_name: emailForm.fullName } },
+      options: {
+        data: { full_name: emailForm.fullName },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
     setLoading(false);
     if (error) { toast.error(error.message); return; }
