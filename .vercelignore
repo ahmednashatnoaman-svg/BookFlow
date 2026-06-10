@@ -1,0 +1,22 @@
+# Python AI service — deployed to Railway, NOT Vercel
+ai-service/
+ai-service/**
+
+# Build artifacts
+frontend/.next/
+frontend/node_modules/
+
+# Supabase migrations — not needed at runtime
+supabase/
+
+# Docs and misc
+docs/
+figma-plugin/
+*.txt
+*.html
+*.md
+!frontend/**/*.md
+
+# Git
+.git/
+.claude/

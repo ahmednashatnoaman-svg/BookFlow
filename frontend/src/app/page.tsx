@@ -9,20 +9,25 @@ import Header from '@/components/layout/Header';
 import BookCard from '@/components/books/BookCard';
 import { createClient } from '@/lib/supabase/server';
 import type { BookListing, Category } from '@/types';
+import { HeroContent, StaggerSection, FadeItem, FadeSection } from '@/components/layout/LandingAnimations';
 
 async function getHomepageData() {
-  const supabase = await createClient();
-  const [{ data: books }, { data: categories }, { count: listingsCount }, { count: usersCount }] = await Promise.all([
-    supabase.from('book_listings')
-      .select('*, owner:user_profiles(id, full_name, avatar_url), category:categories(id, name_en, name_ar, icon, slug)')
-      .eq('status', 'available')
-      .order('created_at', { ascending: false })
-      .limit(8),
-    supabase.from('categories').select('*').order('sort_order'),
-    supabase.from('book_listings').select('*', { count: 'exact', head: true }).eq('status', 'available'),
-    supabase.from('user_profiles').select('*', { count: 'exact', head: true }),
-  ]);
-  return { books: books ?? [], categories: categories ?? [], listingsCount: listingsCount ?? 0, usersCount: usersCount ?? 0 };
+  try {
+    const supabase = await createClient();
+    const [{ data: books }, { data: categories }, { count: listingsCount }, { count: usersCount }] = await Promise.all([
+      supabase.from('book_listings')
+        .select('*, owner:user_profiles(id, full_name, avatar_url), category:categories(id, name_en, name_ar, icon, slug)')
+        .eq('status', 'available')
+        .order('created_at', { ascending: false })
+        .limit(8),
+      supabase.from('categories').select('*').order('sort_order'),
+      supabase.from('book_listings').select('*', { count: 'exact', head: true }).eq('status', 'available'),
+      supabase.from('user_profiles').select('*', { count: 'exact', head: true }),
+    ]);
+    return { books: books ?? [], categories: categories ?? [], listingsCount: listingsCount ?? 0, usersCount: usersCount ?? 0 };
+  } catch {
+    return { books: [], categories: [], listingsCount: 0, usersCount: 0 };
+  }
 }
 
 export default async function HomePage() {
@@ -95,15 +100,16 @@ export default async function HomePage() {
           <div className="absolute bottom-0 left-0 w-[500px] h-[300px] bg-violet-500/5 rounded-full blur-[80px]" />
         </div>
 
+        <HeroContent>
         <div className="page-container relative text-center max-w-5xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-8">
             <Sparkles className="w-3.5 h-3.5" />
             AI-Powered Book Marketplace · Saudi Arabia & MENA
           </div>
 
           {/* Headline */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6 animate-slide-up">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
             Discover Books,<br />
             <span className="gradient-text">Exchange Stories</span>
           </h1>
@@ -143,6 +149,7 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
+        </HeroContent>
       </section>
 
       {/* ── CATEGORY PILLS ───────────────────────────────────────────────── */}
@@ -179,11 +186,13 @@ export default async function HomePage() {
           </div>
 
           {books.length > 0 ? (
-            <div className="book-grid">
+            <StaggerSection className="book-grid">
               {(books as BookListing[]).map(book => (
-                <BookCard key={book.id} book={book} />
+                <FadeItem key={book.id}>
+                  <BookCard book={book} />
+                </FadeItem>
               ))}
-            </div>
+            </StaggerSection>
           ) : (
             <div className="text-center py-20 glass-card">
               <BookOpen className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
@@ -207,9 +216,9 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <StaggerSection className="grid md:grid-cols-3 gap-6">
             {aiFeatures.map((feat, i) => (
-              <div key={i} className={`glass-card p-6 bg-gradient-to-br ${feat.color} ${feat.border} transition-all group cursor-pointer`}>
+              <FadeItem key={i} className={`glass-card p-6 bg-gradient-to-br ${feat.color} ${feat.border} transition-all group cursor-pointer`}>
                 <div className={`w-12 h-12 rounded-2xl ${feat.iconBg} flex items-center justify-center mb-5`}>
                   <feat.icon className={`w-6 h-6 ${feat.iconColor}`} />
                 </div>
@@ -220,9 +229,9 @@ export default async function HomePage() {
                 >
                   {feat.cta} <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
-              </div>
+              </FadeItem>
             ))}
-          </div>
+          </StaggerSection>
         </div>
       </section>
 
@@ -234,12 +243,12 @@ export default async function HomePage() {
             <h2 className="text-3xl sm:text-4xl font-bold">How BookFlow Works</h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          <StaggerSection className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
             {/* Connector line (desktop) */}
             <div className="hidden lg:block absolute top-10 left-[calc(12.5%+2rem)] right-[calc(12.5%+2rem)] h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
             {howItWorks.map((step, i) => (
-              <div key={i} className="glass-card p-6 text-center relative group hover:border-primary/40 transition-all">
+              <FadeItem key={i} className="glass-card p-6 text-center relative group hover:border-primary/40 transition-all">
                 {/* Step number */}
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-background border-2 border-border group-hover:border-primary transition-colors flex items-center justify-center">
                   <span className="text-[10px] font-bold text-muted-foreground group-hover:text-primary transition-colors">{step.step}</span>
@@ -250,9 +259,9 @@ export default async function HomePage() {
                 </div>
                 <h3 className="font-bold mb-2">{step.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
-              </div>
+              </FadeItem>
             ))}
-          </div>
+          </StaggerSection>
         </div>
       </section>
 
@@ -266,17 +275,19 @@ export default async function HomePage() {
                 <h2 className="text-3xl font-bold">Browse by Category</h2>
               </div>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+            <StaggerSection className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
               {(categories as Category[]).map(cat => (
-                <Link key={cat.id} href={`/books?category=${cat.slug}`}
+                <FadeItem key={cat.id}>
+                <Link href={`/books?category=${cat.slug}`}
                   className="glass-card p-4 flex flex-col items-center text-center gap-2 hover:border-primary/40 hover:bg-primary/5 transition-all group"
                 >
                   <span className="text-3xl group-hover:scale-110 transition-transform duration-200">{cat.icon}</span>
                   <p className="text-xs font-semibold leading-tight">{cat.name_en}</p>
                   <p className="text-[10px] text-muted-foreground leading-tight">{cat.name_ar}</p>
                 </Link>
+                </FadeItem>
               ))}
-            </div>
+            </StaggerSection>
           </div>
         </section>
       )}

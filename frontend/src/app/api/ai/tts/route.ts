@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { createClient } from '@/lib/supabase/server';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export async function POST(request: NextRequest) {
+  if (!process.env.OPENAI_API_KEY) {
+    return NextResponse.json({ error: 'TTS not configured' }, { status: 503 });
+  }
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const { listing_id } = await request.json();
   const supabase = await createClient();
 

@@ -1,54 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { createClient } from '@/lib/supabase/server';
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY ?? '' });
 
-const SYSTEM_PROMPT = `You are BookFlow's smart book assistant — a friendly, expert AI helping users discover the perfect books on a peer-to-peer book marketplace in Saudi Arabia and the MENA region.
+const GROQ_TOOL_MODELS = [
+  'llama-3.3-70b-versatile',
+  'llama3-groq-70b-8192-tool-use-preview',
+  'llama3-groq-8b-8192-tool-use-preview',
+];
 
-You have access to the BookFlow marketplace. When users ask to find, search, or browse books, use the search_books tool to query real listings.
+const SYSTEM_PROMPT = `You are BookFlow's smart book assistant — friendly and expert, helping users discover books on a peer-to-peer marketplace in Saudi Arabia and the MENA region.
 
-Key capabilities:
-- Natural language search: "find me a thriller novel under 50 SAR in good condition"
-- Price filtering: "books under 20 SAR", "exchange only books", "free books"
-- Condition filtering: new, good, acceptable, poor
-- Location filtering: by city (Riyadh, Jeddah, Dammam, etc.)
-- Type filtering: sale vs exchange
-- Language filtering: Arabic or English books
-- Sorting: newest, cheapest first, most expensive first
+When users ask to find, search, or browse books, use the search_books function to query real listings.
 
-After searching, present results in a friendly conversational way. Mention the book title, author, price/type, condition, and city.
+Capabilities:
+- Natural language search: "find me a thriller under 50 SAR in good condition"
+- Price, condition, city, language, listing_type filters
+- Sort: newest, cheapest first, most expensive first
 
-If no results found, suggest adjusting the search (broader terms, different filters).
+After searching, present results conversationally. Mention title, author, price/type, condition, city.
+If no results, suggest adjustments.
 
-Respond in the same language the user writes in (Arabic or English).
-For Arabic responses, be warm and use formal Modern Standard Arabic.`;
+Respond in the same language the user writes in (Arabic or English).`;
 
-const SEARCH_TOOL: Anthropic.Tool = {
-  name: 'search_books',
-  description: 'Search BookFlow marketplace for available book listings. Use this whenever the user asks to find, show, browse, or search for books with any criteria.',
-  input_schema: {
-    type: 'object' as const,
-    properties: {
-      query: { type: 'string', description: 'Text search query for title, author, or description. Leave empty to browse all.' },
-      min_price: { type: 'number', description: 'Minimum price in SAR. Use 0 for exchange/free books.' },
-      max_price: { type: 'number', description: 'Maximum price in SAR.' },
-      condition: {
-        type: 'array',
-        items: { type: 'string', enum: ['new', 'good', 'acceptable', 'poor'] },
-        description: 'Book condition filters.',
+const SEARCH_TOOL: Groq.Chat.Completions.ChatCompletionTool = {
+  type: 'function',
+  function: {
+    name: 'search_books',
+    description: 'Search BookFlow marketplace for available book listings.',
+    parameters: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Text search for title, author, or description.' },
+        min_price: { type: 'number', description: 'Minimum price in SAR.' },
+        max_price: { type: 'number', description: 'Maximum price in SAR.' },
+        condition: {
+          type: 'array',
+          items: { type: 'string', enum: ['new', 'good', 'acceptable', 'poor'] },
+        },
+        listing_type: { type: 'string', enum: ['sale', 'exchange'] },
+        city: { type: 'string' },
+        language: { type: 'string', enum: ['en', 'ar'] },
+        sort: { type: 'string', enum: ['newest', 'price_asc', 'price_desc'] },
+        limit: { type: 'number' },
       },
-      listing_type: { type: 'string', enum: ['sale', 'exchange'], description: 'Filter by sale or exchange.' },
-      city: { type: 'string', description: 'City to filter by (e.g. Riyadh, Jeddah, Dammam).' },
-      language: { type: 'string', enum: ['en', 'ar'], description: 'Book language filter.' },
-      sort: {
-        type: 'string',
-        enum: ['newest', 'price_asc', 'price_desc'],
-        description: 'Sort order: newest, cheapest first, most expensive first.',
-      },
-      limit: { type: 'number', description: 'Number of results to return (default 8, max 20).' },
+      required: [],
     },
-    required: [],
   },
 };
 
@@ -66,15 +64,12 @@ interface SearchParams {
 
 async function executeBookSearch(params: SearchParams) {
   const supabase = await createClient();
-
   let q = supabase
     .from('book_listings')
-    .select('id, title, author, price, condition, listing_type, city, language, status, images, cover_image, category:categories(name_en, name_ar, icon)')
+    .select('id,title,author,price,condition,listing_type,city,language,status,cover_image,category:categories(name_en,icon)')
     .eq('status', 'available');
 
-  if (params.query) {
-    q = q.or(`title.ilike.%${params.query}%,author.ilike.%${params.query}%,description.ilike.%${params.query}%`);
-  }
+  if (params.query) q = q.or(`title.ilike.%${params.query}%,author.ilike.%${params.query}%`);
   if (params.min_price !== undefined) q = q.gte('price', params.min_price);
   if (params.max_price !== undefined) q = q.lte('price', params.max_price);
   if (params.condition?.length) q = q.in('condition', params.condition);
@@ -88,80 +83,108 @@ async function executeBookSearch(params: SearchParams) {
     price_desc: { col: 'price', asc: false },
   };
   const sort = sortMap[params.sort ?? 'newest'] ?? sortMap.newest;
-  q = q.order(sort.col, { ascending: sort.asc });
-
-  q = q.limit(Math.min(params.limit ?? 8, 20));
+  q = q.order(sort.col, { ascending: sort.asc }).limit(Math.min(params.limit ?? 8, 20));
 
   const { data, error } = await q;
-  if (error) return { books: [], error: error.message };
+  return { books: data ?? [], count: data?.length ?? 0, error: error?.message };
+}
 
-  return {
-    books: data ?? [],
-    count: data?.length ?? 0,
-  };
+function containsArabic(text: string) {
+  return /[؀-ۿ]/.test(text);
+}
+
+async function runGroqAgent(messages: Groq.Chat.ChatCompletionMessageParam[], locale: string) {
+  let foundBooks: unknown[] = [];
+  let finalText = '';
+
+  // Detect Arabic from last user message OR locale
+  const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+  const isArabic = locale === 'ar' || (lastUserMsg && typeof lastUserMsg.content === 'string' && containsArabic(lastUserMsg.content));
+
+  let systemMsg = SYSTEM_PROMPT;
+  if (isArabic) {
+    systemMsg += `
+
+IMPORTANT — Arabic mode:
+- The user is writing in Arabic. You MUST respond in Arabic (Modern Standard Arabic).
+- When calling search_books, ALWAYS translate Arabic titles, authors, genres, and keywords into English for the "query" parameter. For example, if the user says "روايات تاريخية" use query "historical novels". If they say "أرخص الكتب" set sort to "price_asc" instead.
+- The search database only contains English text for titles/authors, so English queries return better results.
+- After getting results, present them conversationally in Arabic.`;
+  }
+
+  for (const model of GROQ_TOOL_MODELS) {
+    try {
+      const workingMessages = [...messages];
+      for (let iter = 0; iter < 5; iter++) {
+        const response = await groq.chat.completions.create({
+          model,
+          messages: [{ role: 'system', content: systemMsg }, ...workingMessages],
+          tools: [SEARCH_TOOL],
+          tool_choice: 'auto',
+          max_tokens: 1024,
+          temperature: 0.3,
+        });
+
+        const choice = response.choices[0];
+
+        if (choice.finish_reason === 'stop') {
+          finalText = choice.message.content ?? '';
+          return { finalText, foundBooks };
+        }
+
+        if (choice.finish_reason === 'tool_calls') {
+          const toolCalls = choice.message.tool_calls ?? [];
+          workingMessages.push({ role: 'assistant', content: choice.message.content, tool_calls: toolCalls });
+
+          for (const call of toolCalls) {
+            const args = JSON.parse(call.function.arguments || '{}') as SearchParams;
+            const result = await executeBookSearch(args);
+            foundBooks = result.books;
+            workingMessages.push({
+              role: 'tool',
+              tool_call_id: call.id,
+              content: JSON.stringify(result),
+            });
+          }
+          continue;
+        }
+
+        finalText = choice.message.content ?? '';
+        return { finalText, foundBooks };
+      }
+      return { finalText, foundBooks };
+    } catch (err) {
+      console.warn(`Groq model ${model} failed:`, err);
+    }
+  }
+  throw new Error('All Groq models failed');
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages, locale = 'en' } = await request.json();
+    const { messages, locale = 'en' } = await request.json() as {
+      messages: { role: string; content: string }[];
+      locale?: string;
+    };
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'messages array required' }, { status: 400 });
     }
 
-    const anthropicMessages: Anthropic.MessageParam[] = messages.map((m: { role: string; content: string }) => ({
+    if (!process.env.GROQ_API_KEY) {
+      return NextResponse.json({ error: 'AI backend not configured' }, { status: 503 });
+    }
+
+    const groqMessages = messages.map(m => ({
       role: m.role as 'user' | 'assistant',
       content: m.content,
     }));
 
-    let foundBooks: any[] = [];
-    let finalText = '';
-
-    // Agentic loop: allow up to 5 iterations for tool use
-    for (let iter = 0; iter < 5; iter++) {
-      const response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT + (locale === 'ar' ? '\n\nالمستخدم يتحدث بالعربية. أجب بالعربية الفصحى.' : ''),
-        tools: [SEARCH_TOOL],
-        messages: anthropicMessages,
-      });
-
-      if (response.stop_reason === 'end_turn') {
-        finalText = response.content
-          .filter(b => b.type === 'text')
-          .map(b => (b as Anthropic.TextBlock).text)
-          .join('');
-        break;
-      }
-
-      if (response.stop_reason === 'tool_use') {
-        const toolUse = response.content.find(b => b.type === 'tool_use') as Anthropic.ToolUseBlock | undefined;
-        if (!toolUse) break;
-
-        anthropicMessages.push({ role: 'assistant', content: response.content });
-
-        const searchResult = await executeBookSearch(toolUse.input as SearchParams);
-        foundBooks = searchResult.books ?? [];
-
-        anthropicMessages.push({
-          role: 'user',
-          content: [{
-            type: 'tool_result',
-            tool_use_id: toolUse.id,
-            content: JSON.stringify(searchResult),
-          }],
-        });
-
-        continue;
-      }
-
-      break;
-    }
-
-    return NextResponse.json({ response: finalText, books: foundBooks });
-  } catch (e: any) {
-    console.error('AI agent error:', e);
-    return NextResponse.json({ error: e.message ?? 'Internal error' }, { status: 500 });
+    const result = await runGroqAgent(groqMessages, locale);
+    return NextResponse.json({ response: result.finalText, books: result.foundBooks });
+  } catch (e: unknown) {
+    const err = e as Error;
+    console.error('AI agent error:', err);
+    return NextResponse.json({ error: err.message ?? 'Internal error' }, { status: 500 });
   }
 }

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { createClient } from '@/lib/supabase/server';
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 export async function POST(request: NextRequest) {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'placeholder' });
   const { listing_id, message } = await request.json();
   const supabase = await createClient();
 
@@ -22,14 +21,15 @@ Description: ${book.description ?? 'Not provided'}
 ${lang === 'ar' ? 'أجب باللغة العربية فقط. كن مفيداً وموجزاً ومتحمساً للكتب.' : 'Respond in English only. Be helpful, concise, and enthusiastic about books.'}`;
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 500,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: message }],
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message },
+      ],
     });
-
-    return NextResponse.json({ response: (response.content[0] as any).text });
+    return NextResponse.json({ response: response.choices[0].message.content });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }

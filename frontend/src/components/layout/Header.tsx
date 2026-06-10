@@ -5,10 +5,11 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Bell, Menu, X, Plus, LogOut, LayoutDashboard, Shield, ChevronDown, Sparkles, User } from 'lucide-react';
+import { BookOpen, Menu, X, Plus, LogOut, LayoutDashboard, Shield, ChevronDown, Sparkles, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { UserProfile } from '@/types';
 import { cn } from '@/lib/utils';
+import NotificationDrawer from '@/components/layout/NotificationDrawer';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -17,7 +18,6 @@ export default function Header() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [isArabic, setIsArabic] = useState(false);
   const supabase = createClient();
@@ -35,10 +35,7 @@ export default function Header() {
       if (authUser) {
         const { data } = await supabase.from('user_profiles').select('*').eq('id', authUser.id).single();
         setUser(data);
-        const { count } = await supabase.from('notifications')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', authUser.id).eq('read', false);
-        setUnreadCount(count ?? 0);
+        // unread count is managed by NotificationDrawer
       }
     };
     getUser();
@@ -124,14 +121,7 @@ export default function Header() {
                 </Link>
 
                 {/* Notifications */}
-                <Link href="/dashboard" className="relative p-2 hover:bg-muted/50 rounded-lg transition-colors">
-                  <Bell className="w-5 h-5 text-muted-foreground" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-destructive text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
-                      {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
-                  )}
-                </Link>
+                <NotificationDrawer />
 
                 {/* Profile dropdown */}
                 <div className="relative">

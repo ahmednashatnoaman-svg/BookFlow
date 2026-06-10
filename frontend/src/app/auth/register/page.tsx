@@ -33,9 +33,8 @@ export default function RegisterPage() {
       options: { data: { full_name: form.fullName } },
     });
     setLoading(false);
-    if (error) { toast.error(error.message); return; }
-    toast.success(locale === 'ar' ? 'تم إنشاء الحساب! تحقق من بريدك الإلكتروني' : 'Account created! Check your email to verify');
-    router.push('/auth/login');
+    if (error) { toast.error('Failed to create account. Please try again.'); return; }
+    router.push(`/auth/verify?email=${encodeURIComponent(form.email)}`);
   };
 
   const inputClass = "w-full ps-9 pe-3 py-2.5 bg-muted/40 border border-border rounded-xl text-sm focus:outline-none focus:border-primary/60";

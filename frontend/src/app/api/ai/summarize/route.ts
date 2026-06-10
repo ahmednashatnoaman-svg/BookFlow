@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { createClient } from '@/lib/supabase/server';
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 export async function POST(request: NextRequest) {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'placeholder' });
   const { listing_id } = await request.json();
   const supabase = await createClient();
 
@@ -15,8 +14,6 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (!book) return NextResponse.json({ error: 'Book not found' }, { status: 404 });
-
-  // Return cached summary
   if (book.ai_summary) return NextResponse.json(book.ai_summary);
 
   const lang = book.language ?? 'en';
@@ -25,18 +22,15 @@ export async function POST(request: NextRequest) {
     : `You are a literary expert. Analyze this book and respond in JSON only.\nBook: "${book.title}" by ${book.author}\nCategory: ${(book.category as any)?.name_en ?? 'General'}\nDescription: ${book.description ?? 'No description'}\n\nReturn exactly this JSON:\n{"summary":"2-3 sentence summary","key_themes":["theme1","theme2"],"target_audience":"who","mood":"tone","similar_books":["Book 1","Book 2"],"reading_time_estimate":"X hours"}`;
 
   try {
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 800,
       messages: [{ role: 'user', content: prompt }],
+      response_format: { type: 'json_object' },
     });
 
-    const raw = (message.content[0] as any).text.trim();
-    const summary = JSON.parse(raw);
-
-    // Cache in DB
+    const summary = JSON.parse(response.choices[0].message.content ?? '{}');
     await supabase.from('book_listings').update({ ai_summary: summary }).eq('id', listing_id);
-
     return NextResponse.json(summary);
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });

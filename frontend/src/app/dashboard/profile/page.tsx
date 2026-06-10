@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
-import { User, Mail, Phone, MapPin, Edit3, Save, Loader2, CheckCircle } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Edit3, Save, Loader2, CheckCircle, Globe, DollarSign } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import type { UserProfile } from '@/types';
@@ -11,6 +11,30 @@ import type { UserProfile } from '@/types';
 const SAUDI_CITIES = [
   'Riyadh', 'Jeddah', 'Mecca', 'Medina', 'Dammam',
   'Khobar', 'Taif', 'Tabuk', 'Buraidah', 'Khamis Mushait',
+];
+
+const COUNTRIES = [
+  { code: 'SA', name: 'Saudi Arabia', currency: 'SAR' },
+  { code: 'AE', name: 'UAE', currency: 'AED' },
+  { code: 'EG', name: 'Egypt', currency: 'EGP' },
+  { code: 'KW', name: 'Kuwait', currency: 'KWD' },
+  { code: 'QA', name: 'Qatar', currency: 'QAR' },
+  { code: 'BH', name: 'Bahrain', currency: 'BHD' },
+  { code: 'OM', name: 'Oman', currency: 'OMR' },
+  { code: 'JO', name: 'Jordan', currency: 'JOD' },
+  { code: 'LB', name: 'Lebanon', currency: 'USD' },
+  { code: 'US', name: 'United States', currency: 'USD' },
+  { code: 'GB', name: 'United Kingdom', currency: 'GBP' },
+];
+
+const CURRENCIES = [
+  { code: 'SAR', symbol: '﷼', name: 'Saudi Riyal' },
+  { code: 'AED', symbol: 'AED', name: 'UAE Dirham' },
+  { code: 'EGP', symbol: 'E£', name: 'Egyptian Pound' },
+  { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'GBP', symbol: '£', name: 'British Pound' },
+  { code: 'KWD', symbol: 'KD', name: 'Kuwaiti Dinar' },
 ];
 
 export default function ProfilePage() {
@@ -28,6 +52,8 @@ export default function ProfilePage() {
     phone: '',
     city: '',
     bio: '',
+    country: '',
+    currency: 'SAR',
   });
 
   useEffect(() => {
@@ -43,6 +69,8 @@ export default function ProfilePage() {
           phone: data.phone ?? '',
           city: data.city ?? '',
           bio: data.bio ?? '',
+          country: (data as Record<string, unknown>).country as string ?? '',
+          currency: (data as Record<string, unknown>).currency as string ?? 'SAR',
         });
       }
       setLoading(false);
@@ -61,6 +89,8 @@ export default function ProfilePage() {
           phone: form.phone.trim() || null,
           city: form.city || null,
           bio: form.bio.trim() || null,
+          country: form.country || null,
+          currency: form.currency || 'SAR',
         })
         .eq('id', profile.id);
 
@@ -204,6 +234,7 @@ export default function ProfilePage() {
             </label>
             {editing ? (
               <select
+                aria-label="City"
                 value={form.city}
                 onChange={e => setForm(p => ({ ...p, city: e.target.value }))}
                 className="w-full px-3 py-2.5 bg-muted/40 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/60"
@@ -232,6 +263,52 @@ export default function ProfilePage() {
                 {profile?.bio ?? 'No bio yet'}
               </p>
             )}
+          </div>
+
+          {/* Country & Currency */}
+          <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border/50">
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 flex items-center gap-1">
+                <Globe className="w-3.5 h-3.5" /> Country
+              </label>
+              {editing ? (
+                <select
+                  aria-label="Country"
+                  value={form.country}
+                  onChange={e => {
+                    const country = COUNTRIES.find(c => c.code === e.target.value);
+                    setForm(p => ({ ...p, country: e.target.value, currency: country?.currency ?? p.currency }));
+                  }}
+                  className="w-full px-3 py-2.5 bg-muted/40 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/60"
+                >
+                  <option value="">Select country</option>
+                  {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+                </select>
+              ) : (
+                <p className="text-sm py-2.5">
+                  {COUNTRIES.find(c => c.code === (profile as unknown as Record<string, string>)?.country)?.name ?? <span className="text-muted-foreground">Not set</span>}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 flex items-center gap-1">
+                <DollarSign className="w-3.5 h-3.5" /> Currency
+              </label>
+              {editing ? (
+                <select
+                  aria-label="Currency"
+                  value={form.currency}
+                  onChange={e => setForm(p => ({ ...p, currency: e.target.value }))}
+                  className="w-full px-3 py-2.5 bg-muted/40 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/60"
+                >
+                  {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.symbol} {c.code} — {c.name}</option>)}
+                </select>
+              ) : (
+                <p className="text-sm py-2.5">
+                  {CURRENCIES.find(c => c.code === ((profile as unknown as Record<string, string>)?.currency ?? 'SAR'))?.name ?? 'Saudi Riyal'}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
