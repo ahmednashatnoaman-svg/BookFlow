@@ -128,6 +128,7 @@ export default function ListBookPage() {
                 <div key={i} className="relative w-20 h-24">
                   <Image src={img.preview} alt="" fill className="object-cover rounded-lg" />
                   <button type="button" onClick={() => setImages(prev => prev.filter((_, j) => j !== i))}
+                    aria-label={locale === 'ar' ? 'حذف الصورة' : 'Remove image'}
                     className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-destructive text-white rounded-full flex items-center justify-center"
                   ><X className="w-3 h-3" /></button>
                 </div>
