@@ -141,7 +141,7 @@ export default function ListBookPage() {
                   {locale === 'ar' ? 'رفع' : 'Upload'}
                 </button>
               )}
-              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleImageAdd} />
+              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" aria-label={locale === 'ar' ? 'رفع صور الكتاب' : 'Upload book images'} onChange={handleImageAdd} />
             </div>
           </div>
 
