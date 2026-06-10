@@ -1,6 +1,5 @@
 # Python AI service — deployed to Railway, NOT Vercel
-ai-service/
-ai-service/**
+/ai-service/
 
 # Build artifacts
 frontend/.next/
