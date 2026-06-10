@@ -7,11 +7,11 @@ frontend/.next/
 frontend/node_modules/
 
 # Supabase migrations — not needed at runtime
-supabase/
+/supabase/
 
 # Docs and misc
-docs/
-figma-plugin/
+/docs/
+/figma-plugin/
 *.txt
 *.html
 *.md
