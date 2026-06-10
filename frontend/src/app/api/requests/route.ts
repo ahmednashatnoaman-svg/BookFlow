@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { sendRequestReceivedEmail } from '@/lib/email';
 
 function genericError(msg: string, status = 400) {
   return NextResponse.json({ error: msg }, { status });
@@ -57,14 +58,38 @@ export async function POST(request: NextRequest) {
     return genericError('Failed to send request. Please try again.', 400);
   }
 
-  // Notify listing owner (fire-and-forget — don't fail the request if this errors)
+  // Notify listing owner (in-app) — fire-and-forget
   admin.from('notifications').insert({
     user_id: listing.user_id,
     type: 'request_received',
     title: 'New Request for Your Book',
     body: `Someone is interested in "${listing.title}"`,
     data: { request_id: newRequest.id, listing_id, requester_id: user.id },
-  }).then(() => {}).catch(() => {});
+  }).then(() => {}, () => {});
+
+  // Email notification to listing owner — fire-and-forget
+  (async () => {
+    try {
+      const [requesterProfile, ownerAuth] = await Promise.all([
+        admin.from('user_profiles').select('full_name').eq('id', user.id).single(),
+        admin.auth.admin.getUserById(listing.user_id),
+      ]);
+      const ownerEmail = ownerAuth.data.user?.email;
+      if (ownerEmail) {
+        const ownerProfile = await admin.from('user_profiles').select('full_name').eq('id', listing.user_id).single();
+        await sendRequestReceivedEmail({
+          to: ownerEmail,
+          ownerName: ownerProfile.data?.full_name ?? '',
+          requesterName: requesterProfile.data?.full_name ?? user.email ?? 'A BookFlow user',
+          bookTitle: listing.title,
+          bookId: listing_id,
+          message: message?.trim() ?? null,
+        });
+      }
+    } catch (e) {
+      console.error('[email] request received notification failed:', e);
+    }
+  })();
 
   return NextResponse.json(newRequest, { status: 201 });
 }
@@ -96,7 +121,7 @@ export async function GET(request: NextRequest) {
     .from('book_requests')
     .select(`
       id, status, message, created_at, updated_at, offer_listing_id,
-      listing:book_listings(id, title, author, cover_image, listing_type, price, user_id),
+      listing:book_listings!listing_id(id, title, author, cover_image, listing_type, price, user_id),
       requester:user_profiles!requester_id(id, full_name, avatar_url),
       offer:book_listings!offer_listing_id(id, title, author, cover_image)
     `, { count: 'exact' })

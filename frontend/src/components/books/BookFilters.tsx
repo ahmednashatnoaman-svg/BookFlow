@@ -29,7 +29,7 @@ export default function BookFilters({ categories, filters, onChange, onReset }: 
 
   const hasActiveFilters = filters.category_id || filters.condition?.length || filters.listing_type || filters.min_price || filters.max_price;
 
-  const FiltersContent = () => (
+  const renderFilters = () => (
     <div className="space-y-5">
       {/* Sort */}
       <div>
@@ -152,7 +152,7 @@ export default function BookFilters({ categories, filters, onChange, onReset }: 
               <button onClick={onReset} className="text-[10px] text-destructive hover:underline">{t('reset')}</button>
             )}
           </div>
-          {FiltersContent()}
+          {renderFilters()}
         </div>
       </div>
 
@@ -175,7 +175,7 @@ export default function BookFilters({ categories, filters, onChange, onReset }: 
               <h3 className="font-semibold">{t('title')}</h3>
               <button onClick={() => setShowMobileFilters(false)}><X className="w-5 h-5" /></button>
             </div>
-            {FiltersContent()}
+            {renderFilters()}
             <button
               onClick={() => setShowMobileFilters(false)}
               className="w-full mt-4 py-2.5 bg-primary text-primary-foreground rounded-xl font-medium text-sm"
