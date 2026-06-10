@@ -129,7 +129,7 @@ The system serves three actor roles: **Guest**, **Authenticated User**, and **Ad
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-> 🎨 **Interactive Miro Use Case Diagram →** [View on Miro](https://miro.com/app/board/uXjVHHxNBtA=/)
+> 🎨 **Interactive Miro Use Case Diagram →** [View on Miro](https://miro.com/app/board/uXjVHHxNBtA=/?share_link_id=421291780568)
 
 ---
 
@@ -213,7 +213,7 @@ BookFlow uses a three-tier architecture connecting the Next.js frontend, Supabas
 - Notification types enforced by CHECK constraint across 10 event types
 - Full RBAC via `role_permissions` table + `has_permission()` helper
 
-> 🎨 **Interactive Miro ERD →** [View full diagram on Miro](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318) · **Eraser DB Diagram →** [View Schema on Eraser](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share)
+> 🎨 **Interactive Miro ERD →** [View full diagram on Miro](https://miro.com/app/board/uXjVHHxNBtA=/?share_link_id=421291780568&moveToWidget=3458764674998098318) · **Eraser DB Diagram →** [View Schema on Eraser](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share)
 >
 > 📂 **Migrations →** [supabase/migrations/](supabase/migrations/) (7 migration files, 001–007)
 
@@ -394,8 +394,8 @@ BookFlow/
 | 📖 Vision Document | [docs/vision-document.md](docs/vision-document.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence](https://iti46medical.atlassian.net/wiki/x/AgBNAQ) | — |
 | 📑 Requirements | [docs/requirements-specification.md](docs/requirements-specification.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) | — |
 | 👥 User Stories | [docs/user-stories.md](docs/user-stories.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [CF Epic](https://iti46medical.atlassian.net/browse/CF-120) |
-| 🔄 Use Case Diagram | — | — | — | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/) |
-| 🗄 ERD | [supabase/migrations/](supabase/migrations/) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Miro ERD](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318) / [Eraser DB Schema](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share) |
+| 🔄 Use Case Diagram | — | — | — | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/?share_link_id=421291780568) |
+| 🗄 ERD | [supabase/migrations/](supabase/migrations/) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Miro ERD](https://miro.com/app/board/uXjVHHxNBtA=/?share_link_id=421291780568&moveToWidget=3458764674998098318) / [Eraser DB Schema](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share) |
 | 🌐 API Docs | [docs/api-documentation.md](docs/api-documentation.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | — |
 | 🎨 Wireframes | — | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Stitch Project](https://stitch.withgoogle.com/projects/4122066542971601180) |
 | 🏗 System Architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | — | — | [Eraser Diagram](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr?origin=share) / [Eraser Workflow](https://app.eraser.io/workspace/SJoBG0TvkyDePQOqICpP?origin=share) |
@@ -412,7 +412,7 @@ BookFlow is integrated and tracked across a modern product management, design, a
 | **Jira** | Project Tracking | Sprint planning, Epic/User Story tracking, and Task Board management | [CF Epic & Board](https://iti46medical.atlassian.net/browse/CF-120) |
 | **Notion** | Knowledge Base | Central workspace containing the vision, specifications, user stories, and API documentation | [BookFlow Notion Workspace](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) |
 | **Confluence** | Requirements Repository | Corporate document repository hosting the Vision Document and SRS Hub | [Confluence medical-iti46 Hub](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) |
-| **Miro** | Collaboration / Diagrams | Interactive canvas for the Use Case diagram and full entity database design (Miro ERD) | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/) |
+| **Miro** | Collaboration / Diagrams | Interactive canvas for the Use Case diagram and full entity database design (Miro ERD) | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/?share_link_id=421291780568) |
 | **Eraser.io** | Architecture Drawing | Technical diagrams representing system topology, sequence flows, and physical DB schema | [System Architecture](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr?origin=share) / [Data Flows](https://app.eraser.io/workspace/SJoBG0TvkyDePQOqICpP?origin=share) / [DB Schema](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share) |
 | **Google Stitch** | UI/UX Wireframing | AI-assisted layout creation and screen mockups matching the dark navy & violet design system | [Stitch Project (4122066542971601180)](https://stitch.withgoogle.com/projects/4122066542971601180) |
 | **Google NotebookLM** | AI Presentation | Interactive presentation slides, audio briefings, and document synthesis of BookFlow | [NotebookLM Presentation](https://notebooklm.google.com/notebook/b87b9029-6d99-477c-8818-4176af814a26/artifact/8353f781-dd2b-4bc4-97c0-875f4ef50f26?utm_source=nlmm_share) |

@@ -99,5 +99,5 @@ Deliver a fully functional BookFlow MVP with AI features, 13 database modules, b
 
 ## Key Links
 - **Eraser Architecture:** https://app.eraser.io/workspace/SJoBG0TvkyDePQOqICpP
-- **Miro Diagrams:** https://miro.com/app/board/uXjVHHxNBtA=/
+- **Miro Diagrams:** https://miro.com/app/board/uXjVHHxNBtA=/?share_link_id=421291780568
 - **Vercel:** TBD after deployment
