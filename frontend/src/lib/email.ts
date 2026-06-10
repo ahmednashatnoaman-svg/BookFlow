@@ -1,6 +1,9 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? '');
+// Lazy — never constructed at module load time (would throw at Next.js build)
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY!);
+}
 const FROM = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://bookflow.vercel.app';
 
@@ -67,7 +70,7 @@ export async function sendRequestReceivedEmail(opts: {
     <a href="${dashboardUrl}" class="cta">View Request →</a>
   `;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: opts.to,
     subject: `New request for your book "${opts.bookTitle}"`,
@@ -96,7 +99,7 @@ export async function sendRequestAcceptedEmail(opts: {
     <a href="${bookUrl}" class="cta">View Listing →</a>
   `;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: opts.to,
     subject: `✅ Your request for "${opts.bookTitle}" was accepted!`,
@@ -123,7 +126,7 @@ export async function sendRequestRejectedEmail(opts: {
     <a href="${browseUrl}" class="cta">Browse Books →</a>
   `;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: opts.to,
     subject: `Update on your request for "${opts.bookTitle}"`,
