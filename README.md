@@ -250,7 +250,7 @@ The system serves three actor roles: **Guest**, **Authenticated User**, and **Ad
 
 Designed in **Google Stitch** — AI-generated UI screens matching the BookFlow design system (deep navy + violet + teal).
 
-> 🎨 **Interactive Wireframes →** [View Stitch Project](https://stitch.google.com)
+> 🎨 **Interactive Wireframes →** [View Stitch Project](https://stitch.withgoogle.com/projects/4122066542971601180)
 
 ### Design System
 
@@ -388,7 +388,7 @@ BookFlow/
 | 🔄 Use Case Diagram | — | — | — | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/) |
 | 🗄 ERD | [supabase/migrations/](supabase/migrations/) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Miro ERD](https://miro.com/app/board/uXjVHHxNBtA=/?moveToWidget=3458764674998098318) |
 | 🌐 API Docs | [docs/api-documentation.md](docs/api-documentation.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | — |
-| 🎨 Wireframes | — | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Stitch Project](https://stitch.google.com) |
+| 🎨 Wireframes | — | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [Stitch Project](https://stitch.withgoogle.com/projects/4122066542971601180) |
 | 🏗 System Architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | — | — | [Eraser Diagram](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr) |
 | 📓 Presentation Slides | — | — | — | [NotebookLM Presentation](https://notebooklm.google.com/notebook/b87b9029-6d99-477c-8818-4176af814a26/artifact/8353f781-dd2b-4bc4-97c0-875f4ef50f26?utm_source=nlmm_share) |
 | 📊 Sprint Plan | [docs/sprint-plan.md](docs/sprint-plan.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [CF-120](https://iti46medical.atlassian.net/browse/CF-120) |
