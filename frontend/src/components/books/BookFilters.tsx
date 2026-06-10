@@ -152,7 +152,7 @@ export default function BookFilters({ categories, filters, onChange, onReset }: 
               <button onClick={onReset} className="text-[10px] text-destructive hover:underline">{t('reset')}</button>
             )}
           </div>
-          <FiltersContent />
+          {FiltersContent()}
         </div>
       </div>
 
@@ -175,7 +175,7 @@ export default function BookFilters({ categories, filters, onChange, onReset }: 
               <h3 className="font-semibold">{t('title')}</h3>
               <button onClick={() => setShowMobileFilters(false)}><X className="w-5 h-5" /></button>
             </div>
-            <FiltersContent />
+            {FiltersContent()}
             <button
               onClick={() => setShowMobileFilters(false)}
               className="w-full mt-4 py-2.5 bg-primary text-primary-foreground rounded-xl font-medium text-sm"
