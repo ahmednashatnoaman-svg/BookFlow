@@ -403,6 +403,24 @@ BookFlow/
 | 📊 Sprint Plan | [docs/sprint-plan.md](docs/sprint-plan.md) | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | — | [CF-120](https://iti46medical.atlassian.net/browse/CF-120) |
 | 🚀 MVP | This README | [Notion](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) | [Confluence Hub](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) | — |
 
+### 🛠️ Connected Tools & Integration Ecosystem
+
+BookFlow is integrated and tracked across a modern product management, design, and development ecosystem. The full list of tools linked in this project includes:
+
+| Tool / Platform | Category | Purpose | Workspace Links |
+|-----------------|----------|---------|-----------------|
+| **Jira** | Project Tracking | Sprint planning, Epic/User Story tracking, and Task Board management | [CF Epic & Board](https://iti46medical.atlassian.net/browse/CF-120) |
+| **Notion** | Knowledge Base | Central workspace containing the vision, specifications, user stories, and API documentation | [BookFlow Notion Workspace](https://app.notion.com/p/37bab3f8c55d81a6a592cde7ef903e27) |
+| **Confluence** | Requirements Repository | Corporate document repository hosting the Vision Document and SRS Hub | [Confluence medical-iti46 Hub](https://iti46medical.atlassian.net/wiki/x/AoBMAQ) |
+| **Miro** | Collaboration / Diagrams | Interactive canvas for the Use Case diagram and full entity database design (Miro ERD) | [Miro Board](https://miro.com/app/board/uXjVHHxNBtA=/) |
+| **Eraser.io** | Architecture Drawing | Technical diagrams representing system topology, sequence flows, and physical DB schema | [System Architecture](https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr?origin=share) / [Data Flows](https://app.eraser.io/workspace/SJoBG0TvkyDePQOqICpP?origin=share) / [DB Schema](https://app.eraser.io/workspace/LFve9C23yoJzpU5fJHCA?origin=share) |
+| **Google Stitch** | UI/UX Wireframing | AI-assisted layout creation and screen mockups matching the dark navy & violet design system | [Stitch Project (4122066542971601180)](https://stitch.withgoogle.com/projects/4122066542971601180) |
+| **Google NotebookLM** | AI Presentation | Interactive presentation slides, audio briefings, and document synthesis of BookFlow | [NotebookLM Presentation](https://notebooklm.google.com/notebook/b87b9029-6d99-477c-8818-4176af814a26/artifact/8353f781-dd2b-4bc4-97c0-875f4ef50f26?utm_source=nlmm_share) |
+| **Supabase** | Cloud Database & Auth | PostgreSQL 16 server, RLS rules, pgvector engine, Supabase Auth, and Storage buckets | [Supabase Console](https://supabase.com) |
+| **Vercel** | Hosting & Frontend CDN | Edge functions API handler, React Server Components hosting, and global CDN caching | [Vercel Deployment](https://book-flow-umber.vercel.app/) |
+| **Railway** | AI Microservice Host | Deployment host for the FastAPI similarity embeddings and TTS cache handlers | [FastAPI AI Service](https://bookflow-ai.railway.app) |
+| **Groq / Llama3** | AI Search & Summaries | LLM provider for Bilingual NLP Chat Agent and book summary generations | [Groq Developer Console](https://groq.com) |
+
 ---
 
 ## ⚙️ Local Setup
