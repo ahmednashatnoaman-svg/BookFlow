@@ -227,7 +227,7 @@ Architecture diagram: https://app.eraser.io/workspace/6Ixh5SP3Na5IyxrYWAmr
 | 📊 Dashboard | Ahmad's Dashboard - BookFlow | `15077cbff2af4ffd98f26736668e3731` |
 | 🎨 Logo | BookFlow Logo | `e8987b28c3294f0a828a16b2ce0b4fb2` |
 
-Each screen has a hosted screenshot and downloadable HTML/CSS export available in the Stitch project.
+Each screen has a hosted screenshot and downloadable HTML/CSS export available in the [Stitch Project](https://stitch.withgoogle.com/projects/4122066542971601180).
 
 Design tokens file: [frontend/src/lib/design-tokens.json](frontend/src/lib/design-tokens.json)
 Figma plugin (fallback generator): [figma-plugin/code.js](figma-plugin/code.js)
