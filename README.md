@@ -427,6 +427,14 @@ cp .env.example .env.local
 npm run dev
 ```
 
+### 🔐 Developer Admin Bypass (Local/Dev Mode)
+
+For local testing and verification purposes, a developer admin bypass is built-in. You can access the **Admin Dashboard** (`/admin`) using these credentials on the sign-in page:
+* **Email / Username:** `admin` (or `admin@bookflow.app`)
+* **Password:** `admin`
+
+This sets a local developer cookie, simulating a fully authenticated administrator profile without needing a live OTP phone verification.
+
 ### Environment Variables
 
 | Variable | Required | Description |
