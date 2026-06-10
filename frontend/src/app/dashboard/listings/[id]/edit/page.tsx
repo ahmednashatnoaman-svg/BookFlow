@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, use } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Upload, X, Loader2, BookOpen, ArrowLeft, Save } from 'lucide-react';
@@ -28,8 +28,8 @@ const EGYPT_CITIES = [
   'Suez', 'Mansoura', 'Tanta', 'Assiut', 'Aswan',
 ];
 
-export default function EditBookPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function EditBookPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const router = useRouter();
   const locale = useLocale() as 'en' | 'ar';
   const fileInputRef = useRef<HTMLInputElement>(null);

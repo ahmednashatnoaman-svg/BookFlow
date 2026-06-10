@@ -34,7 +34,7 @@ function LoginForm() {
       email: 'Email',
       password: 'Password',
       phone: 'Phone Number',
-      phonePlaceholder: '+966 5X XXX XXXX',
+      phonePlaceholder: '+20 1X XXXX XXXX',
       phoneHint: "We'll send a one-time code to your phone",
       btn: 'Sign In',
       sendCode: 'Send Code',
@@ -49,7 +49,7 @@ function LoginForm() {
       email: 'البريد الإلكتروني',
       password: 'كلمة المرور',
       phone: 'رقم الهاتف',
-      phonePlaceholder: '+966 5X XXX XXXX',
+      phonePlaceholder: '+20 1X XXXX XXXX',
       phoneHint: 'سنرسل رمزاً لمرة واحدة إلى هاتفك',
       btn: 'تسجيل الدخول',
       sendCode: 'إرسال الرمز',
@@ -73,7 +73,7 @@ function LoginForm() {
     e.preventDefault();
     const cleaned = phone.trim();
     if (!cleaned.startsWith('+')) {
-      toast.error(locale === 'ar' ? 'أدخل رمز الدولة مثل +966' : 'Include country code, e.g. +966501234567');
+      toast.error(locale === 'ar' ? 'أدخل رمز الدولة مثل +20' : 'Include country code, e.g. +201012345678');
       return;
     }
     setLoading(true);

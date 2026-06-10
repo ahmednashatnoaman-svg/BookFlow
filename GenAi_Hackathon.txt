@@ -1,36 +1,24 @@
 3 - Peer-to-Peer Book Exchange System
 Overview A web platform where users can sell or exchange used books with others in a simple,
 chat-free marketplace.
+
 User Roles
 ●​ Guest — browses listings and searches books without creating an account
 ●​ Registered User — lists books for sale or exchange, sends contact requests, and
 manages transactions
 ●​ Admin — manages the platform, moderates listings and users, and configures
 categories
+
 Core Features per Role
-Guest
-●​
-●​
-●​
-●​
+
+Guest:
 
 Browse all book listings without login
 Search and filter books by title, author, category, condition, or price range
 View book details (description, condition, listing type, owner profile preview)
 Prompted to register to contact a seller or propose an exchange
 
-Registered User
-●​
-●​
-●​
-●​
-●​
-●​
-●​
-●​
-●​
-●​
-●​
+Registered User:
 
 Register / login (email or phone number)
 Add a book listing with title, author, category, condition, photos, and description
@@ -44,11 +32,7 @@ View and manage incoming and outgoing requests (accept / reject)
 Track transaction history (completed sales and exchanges)
 Save books to wishlist
 
-Admin
-●​
-●​
-●​
-●​
+Admin:
 
 Create and manage book categories
 Moderate listings (review, edit, or remove inappropriate content)
@@ -58,12 +42,7 @@ categories)
 ●​ Configure platform settings (listing rules, image limits)
 Core Features
 
-Listings
-●​
-●​
-●​
-●​
-●​
+Listings:
 
 Full CRUD for book listings
 Condition grading (new / good / acceptable / poor)
@@ -76,11 +55,7 @@ Search & Filter
 ●​ Filter by condition, listing type, or price range
 ●​ Sort by newest or most relevant
 Exchange & Purchase Requests
-●​
-●​
-●​
-●​
-●​
+●
 
 Registered user sends a contact request with an optional message
 For exchange: user selects one of their own listed books as the swap offer
@@ -95,10 +70,7 @@ Transaction History
 ●​ View completed sales and exchanges
 ●​ Basic record: book title, other party, date, type (sale or exchange)
 Dashboard & Reports (Admin)
-●​
-●​
-●​
-●​
+
 
 Total listings and active users
 Exchange volume per category
@@ -106,11 +78,6 @@ Most listed or requested books
 Reported or flagged listings
 
 Shared Core Features
-●​
-●​
-●​
-●​
-●​
 
 Authentication & role-based access control (RBAC)
 Notification service — contact requests, exchange proposals, and listing activity
