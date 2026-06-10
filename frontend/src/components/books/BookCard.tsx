@@ -53,12 +53,11 @@ export default function BookCard({ book, showWishlist = true, className }: BookC
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       className={cn('group relative', className)}
     >
       <Link href={`/books/${book.id}`}>
-        <div className="glass-card overflow-hidden cursor-pointer hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+        <div className="book-card overflow-hidden cursor-pointer">
           {/* Cover image */}
           <div className="relative aspect-[3/4] overflow-hidden bg-muted/30">
             <Image

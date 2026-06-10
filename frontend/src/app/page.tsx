@@ -103,48 +103,44 @@ export default async function HomePage() {
         <HeroContent>
         <div className="page-container relative text-center max-w-5xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-8">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/15 text-primary text-xs font-bold mb-8 tracking-wide">
+            <Sparkles className="w-3 h-3" />
             AI-Powered Book Marketplace · Saudi Arabia & MENA
           </div>
 
-          {/* Headline */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
+          {/* Headline — Playfair Display */}
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6">
             Discover Books,<br />
-            <span className="gradient-text">Exchange Stories</span>
+            <em className="gradient-text not-italic">Exchange Stories</em>
           </h1>
 
           {/* Subheading */}
-          <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light">
             The smartest way to buy, sell, and exchange books in Saudi Arabia.
             Powered by AI that understands what you&apos;re looking for.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
-            <Link href="/books"
-              className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
-            >
+            <Link href="/books" className="btn-primary">
               <BookOpen className="w-4 h-4" /> Browse Books
             </Link>
-            <Link href="/chat"
-              className="flex items-center gap-2 px-7 py-3.5 bg-violet-500/15 text-violet-300 border border-violet-500/30 rounded-xl font-semibold hover:bg-violet-500/25 hover:border-violet-500/50 transition-all hover:-translate-y-0.5"
-            >
+            <Link href="/chat" className="btn-ghost-violet">
               <Sparkles className="w-4 h-4" /> Try AI Search
             </Link>
             <Link href="/list-book"
-              className="flex items-center gap-2 px-7 py-3.5 border border-border bg-muted/20 rounded-xl font-semibold hover:bg-muted/40 transition-all text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-2 px-7 py-3 border border-border/60 bg-transparent rounded-xl font-semibold text-sm hover:bg-muted/30 transition-all text-muted-foreground hover:text-foreground"
             >
               List Your Books <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          {/* Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
-            {stats.map(s => (
-              <div key={s.label} className="text-center">
-                <p className="text-3xl font-extrabold gradient-text">{s.value}</p>
-                <p className="text-xs text-muted-foreground mt-1 font-medium">{s.label}</p>
+          {/* Stats — editorial KPI treatment */}
+          <div className="flex flex-wrap items-center justify-center gap-px">
+            {stats.map((s, i) => (
+              <div key={s.label} className={`text-center px-10 py-2 ${i < stats.length - 1 ? 'border-r border-border/50' : ''}`}>
+                <p className="kpi-value text-3xl gradient-text">{s.value}</p>
+                <p className="text-xs text-muted-foreground mt-1.5 font-medium tracking-wide">{s.label}</p>
               </div>
             ))}
           </div>
@@ -177,8 +173,8 @@ export default async function HomePage() {
         <div className="page-container">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-xs font-bold text-primary uppercase tracking-widest mb-2">Fresh Listings</p>
-              <h2 className="text-3xl font-bold">Recently Added</h2>
+              <p className="eyebrow text-primary mb-2">Fresh Listings</p>
+              <h2 className="section-heading">Recently Added</h2>
             </div>
             <Link href="/books" className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors group">
               View all <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -209,9 +205,9 @@ export default async function HomePage() {
       <section className="py-20 bg-card/20 border-y border-border/40">
         <div className="page-container">
           <div className="text-center mb-14">
-            <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-3">Powered by Claude AI</p>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Your AI-Powered Reading Companion</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="eyebrow mb-3 text-[hsl(262_83%_70%)]">Powered by Claude AI</p>
+            <h2 className="section-heading text-4xl sm:text-5xl mb-4">Your AI Reading Companion</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-light">
               Three intelligent features that transform how you discover, understand, and exchange books.
             </p>
           </div>
@@ -239,25 +235,23 @@ export default async function HomePage() {
       <section className="py-20">
         <div className="page-container">
           <div className="text-center mb-14">
-            <p className="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">Simple Process</p>
-            <h2 className="text-3xl sm:text-4xl font-bold">How BookFlow Works</h2>
+            <p className="eyebrow text-[hsl(168_76%_42%)] mb-3">Simple Process</p>
+            <h2 className="section-heading text-4xl sm:text-5xl">How BookFlow Works</h2>
           </div>
 
           <StaggerSection className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-            {/* Connector line (desktop) */}
-            <div className="hidden lg:block absolute top-10 left-[calc(12.5%+2rem)] right-[calc(12.5%+2rem)] h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+            <div className="hidden lg:block absolute top-12 left-[calc(12.5%+2rem)] right-[calc(12.5%+2rem)] h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
             {howItWorks.map((step, i) => (
-              <FadeItem key={i} className="glass-card p-6 text-center relative group hover:border-primary/40 transition-all">
-                {/* Step number */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-background border-2 border-border group-hover:border-primary transition-colors flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-muted-foreground group-hover:text-primary transition-colors">{step.step}</span>
+              <FadeItem key={i} className="glass-card-hover p-7 text-center relative group">
+                {/* Step number — editorial style */}
+                <div className="font-display text-5xl font-bold text-primary/15 leading-none mb-4 group-hover:text-primary/25 transition-colors select-none">
+                  {step.step}
                 </div>
-
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 mt-2 group-hover:bg-primary/20 transition-colors">
-                  <step.icon className="w-7 h-7 text-primary" />
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                  <step.icon className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-bold mb-2">{step.title}</h3>
+                <h3 className="font-semibold mb-2">{step.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
               </FadeItem>
             ))}
@@ -271,8 +265,8 @@ export default async function HomePage() {
           <div className="page-container">
             <div className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-xs font-bold text-primary uppercase tracking-widest mb-2">Explore</p>
-                <h2 className="text-3xl font-bold">Browse by Category</h2>
+                <p className="eyebrow text-primary mb-2">Explore</p>
+                <h2 className="section-heading">Browse by Category</h2>
               </div>
             </div>
             <StaggerSection className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -315,22 +309,22 @@ export default async function HomePage() {
 
       {/* ── CTA BANNER ───────────────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/15 via-primary/5 to-teal-500/10 pointer-events-none" />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-500/8 rounded-full blur-3xl" />
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/3 w-[500px] h-[300px] bg-primary/8 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-[hsl(168_76%_42%)]/6 rounded-full blur-[80px]" />
+        </div>
         <div className="page-container relative text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Ready to Clear Your Shelf?</h2>
-          <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
+          <p className="eyebrow text-primary mb-4">Get Started</p>
+          <h2 className="section-heading text-4xl sm:text-5xl mb-4">Ready to Clear Your Shelf?</h2>
+          <p className="text-muted-foreground text-lg mb-10 max-w-md mx-auto font-light">
             Join thousands of readers exchanging books across Saudi Arabia.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link href="/auth/register"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 hover:-translate-y-0.5"
-            >
+            <Link href="/auth/register" className="btn-primary text-base px-8 py-4 rounded-xl">
               Get Started Free <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="/books"
-              className="inline-flex items-center gap-2 px-8 py-4 border border-border rounded-xl font-semibold text-lg hover:bg-muted/40 transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 border border-border/60 rounded-xl font-semibold text-base hover:bg-muted/30 transition-all text-muted-foreground hover:text-foreground"
             >
               Browse Books
             </Link>

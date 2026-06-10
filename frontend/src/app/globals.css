@@ -1,69 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* ── BookFlow Design System — aligned with Google Stitch "BookFlow Narrative" ── */
+  /* ── BookFlow Design System — Literary Noir × Warm Amber ── */
   :root {
-    /* Base palette — dark navy #0F172A */
-    --background:        224 71% 4%;      /* #0F172A */
-    --foreground:        213 31% 91%;     /* #E2E8F0 */
+    /* Base palette — deep warm charcoal (not cold navy, not pure black) */
+    --background:        222 18% 6%;       /* #0C0E17 */
+    --foreground:        32  10% 88%;      /* #E3DDD7 — warm white */
 
     /* Surface layers */
-    --card:              224 61% 7%;      /* #111827 */
-    --card-foreground:   213 31% 91%;
-    --popover:           224 61% 6%;
-    --popover-foreground:213 31% 91%;
+    --card:              222 16% 9%;       /* #121520 */
+    --card-foreground:   32  10% 88%;
+    --popover:           222 16% 8%;
+    --popover-foreground:32  10% 88%;
 
-    /* Violet AI accent #8B5CF6 → hsl(262 83% 64%) */
-    --primary:           262 83% 64%;
-    --primary-foreground:0 0% 100%;
+    /* PRIMARY: Amber / Book Gold */
+    --primary:           38  95% 48%;      /* #F59E0B */
+    --primary-foreground:222 18% 6%;       /* dark text on amber */
 
-    /* Emerald active #10B981 → hsl(160 84% 39%) */
+    /* VIOLET: AI-only accent */
+    --violet:            262 83% 64%;      /* #8B5CF6 */
+    --violet-foreground: 0 0% 100%;
+
+    /* Emerald success */
     --emerald:           160 84% 39%;
     --emerald-foreground:0 0% 100%;
 
-    /* Rose error #F43F5E → hsl(350 89% 60%) */
+    /* Rose error */
     --destructive:       350 89% 60%;
     --destructive-foreground: 0 0% 98%;
 
     /* Neutral surfaces */
-    --secondary:         215 28% 17%;
-    --secondary-foreground: 213 31% 91%;
-    --muted:             215 28% 17%;
-    --muted-foreground:  217 10% 54%;
+    --secondary:         222 14% 14%;
+    --secondary-foreground: 32 10% 88%;
+    --muted:             222 14% 14%;
+    --muted-foreground:  222 8%  46%;
 
-    /* Accent = violet (same as primary for consistency) */
-    --accent:            262 83% 64%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent = amber */
+    --accent:            38  95% 48%;
+    --accent-foreground: 222 18% 6%;
 
-    /* Teal secondary highlight */
+    /* Teal — secondary highlight */
     --teal:              168 76% 42%;
 
     /* Borders & inputs */
-    --border:            215 28% 20%;
-    --input:             215 28% 15%;
-    --ring:              262 83% 64%;
+    --border:            222 12% 17%;
+    --input:             222 12% 13%;
+    --ring:              38  95% 48%;
 
-    /* Radius — Stitch uses 12px = 0.75rem */
+    /* Radius */
     --radius:            0.75rem;
 
-    /* Charts (BookFlow branded) */
-    --chart-1: 262 83% 64%;   /* violet */
+    /* Charts */
+    --chart-1: 38  95% 48%;   /* amber */
     --chart-2: 160 84% 39%;   /* emerald */
     --chart-3: 168 76% 42%;   /* teal */
     --chart-4: 350 89% 60%;   /* rose */
-    --chart-5: 43  96% 56%;   /* amber */
+    --chart-5: 262 83% 64%;   /* violet */
 
-    /* Glassmorphism tokens */
-    --glass-bg:          rgba(17, 24, 39, 0.80);
-    --glass-border:      rgba(139, 92, 246, 0.15);
-    --glass-blur:        12px;
+    /* Glassmorphism — amber tinted, more subtle */
+    --glass-bg:          rgba(12, 14, 23, 0.88);
+    --glass-border:      rgba(245, 158, 11, 0.10);
+    --glass-blur:        10px;
 
-    /* Gradient stops */
-    --gradient-start:    hsl(262 83% 64%);
+    /* Gradient stops — amber → teal */
+    --gradient-start:    hsl(38  95% 48%);
     --gradient-end:      hsl(168 76% 42%);
   }
 }
@@ -92,10 +96,14 @@
   [dir="rtl"] {
     font-family: 'Noto Sans Arabic', system-ui, sans-serif;
   }
+  /* Smooth heading renders with display font */
+  h1, h2, h3 {
+    text-rendering: optimizeLegibility;
+  }
 }
 
 @layer components {
-  /* ── Glassmorphism card (Stitch signature style) ── */
+  /* ── Glass card — amber tinted ── */
   .glass-card {
     background: var(--glass-bg);
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -104,7 +112,6 @@
     border-radius: var(--radius);
   }
 
-  /* Hover-lift variant */
   .glass-card-hover {
     background: var(--glass-bg);
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -115,11 +122,44 @@
   }
   .glass-card-hover:hover {
     transform: translateY(-2px);
-    border-color: hsl(var(--primary) / 0.4);
-    box-shadow: 0 8px 32px hsl(var(--primary) / 0.12);
+    border-color: hsl(var(--primary) / 0.35);
+    box-shadow: 0 8px 32px hsl(var(--primary) / 0.10);
   }
 
-  /* ── Gradient text — violet → teal (Stitch hero headline style) ── */
+  /* ── Book card — spine accent on hover ── */
+  .book-card {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .book-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: hsl(var(--primary));
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.25s ease;
+    border-radius: 0 0 0 var(--radius);
+  }
+  .book-card:hover {
+    transform: translateY(-3px);
+    border-color: hsl(var(--primary) / 0.30);
+    box-shadow: 0 12px 40px hsl(var(--primary) / 0.09);
+  }
+  .book-card:hover::before {
+    transform: scaleY(1);
+  }
+
+  /* ── Gradient text — amber → teal ── */
   .gradient-text {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--teal)));
     -webkit-background-clip: text;
@@ -127,7 +167,7 @@
     background-clip: text;
   }
 
-  /* Violet-only gradient */
+  /* Violet gradient — AI features only */
   .gradient-text-violet {
     background: linear-gradient(135deg, hsl(262 83% 70%), hsl(262 83% 55%));
     -webkit-background-clip: text;
@@ -135,7 +175,38 @@
     background-clip: text;
   }
 
-  /* ── Button variants aligned with Stitch ── */
+  /* ── Display heading — Playfair Display ── */
+  .font-display {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  /* ── Stat card — editorial number treatment ── */
+  .stat-card {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .stat-card:hover::after {
+    opacity: 1;
+  }
+
+  /* ── Primary button — amber ── */
   .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -144,57 +215,99 @@
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
     border-radius: calc(var(--radius) * 1.25);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.875rem;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 20px hsl(var(--primary) / 0.3);
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.28);
+    letter-spacing: 0.01em;
   }
   .btn-primary:hover {
-    background: hsl(var(--primary) / 0.9);
-    box-shadow: 0 6px 24px hsl(var(--primary) / 0.4);
+    background: hsl(38 95% 54%);
+    box-shadow: 0 6px 28px hsl(var(--primary) / 0.38);
     transform: translateY(-1px);
   }
 
-  .btn-ghost-violet {
+  /* ── Ghost amber button ── */
+  .btn-ghost-amber {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.75rem;
-    background: hsl(var(--primary) / 0.12);
-    color: hsl(var(--primary) / 0.9);
+    background: hsl(var(--primary) / 0.10);
+    color: hsl(var(--primary));
     border: 1px solid hsl(var(--primary) / 0.25);
     border-radius: calc(var(--radius) * 1.25);
     font-weight: 600;
     font-size: 0.875rem;
     transition: all 0.2s ease;
   }
-  .btn-ghost-violet:hover {
-    background: hsl(var(--primary) / 0.2);
+  .btn-ghost-amber:hover {
+    background: hsl(var(--primary) / 0.18);
     border-color: hsl(var(--primary) / 0.45);
   }
 
+  /* ── AI violet button ── */
+  .btn-ghost-violet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    background: hsl(var(--violet) / 0.12);
+    color: hsl(var(--violet));
+    border: 1px solid hsl(var(--violet) / 0.25);
+    border-radius: calc(var(--radius) * 1.25);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  }
+  .btn-ghost-violet:hover {
+    background: hsl(var(--violet) / 0.20);
+    border-color: hsl(var(--violet) / 0.45);
+  }
+
   /* ── Status badge variants ── */
-  .badge-available  { background: hsl(var(--emerald) / 0.15); color: hsl(var(--emerald)); border: 1px solid hsl(var(--emerald) / 0.25); }
-  .badge-sold       { background: hsl(217 10% 54% / 0.15); color: hsl(217 10% 64%); border: 1px solid hsl(217 10% 54% / 0.2); }
-  .badge-exchanged  { background: hsl(var(--teal) / 0.15); color: hsl(var(--teal)); border: 1px solid hsl(var(--teal) / 0.25); }
-  .badge-new        { background: hsl(var(--primary) / 0.15); color: hsl(var(--primary)); border: 1px solid hsl(var(--primary) / 0.25); }
-  .badge-pending    { background: hsl(43 96% 56% / 0.15); color: hsl(43 96% 56%); border: 1px solid hsl(43 96% 56% / 0.25); }
-  .badge-error      { background: hsl(var(--destructive) / 0.15); color: hsl(var(--destructive)); border: 1px solid hsl(var(--destructive) / 0.25); }
+  .badge-available  { background: hsl(var(--emerald) / 0.14); color: hsl(var(--emerald)); border: 1px solid hsl(var(--emerald) / 0.22); }
+  .badge-sold       { background: hsl(222 8% 46% / 0.14); color: hsl(222 8% 60%); border: 1px solid hsl(222 8% 46% / 0.20); }
+  .badge-exchanged  { background: hsl(var(--teal) / 0.14); color: hsl(var(--teal)); border: 1px solid hsl(var(--teal) / 0.22); }
+  .badge-new        { background: hsl(var(--primary) / 0.14); color: hsl(var(--primary)); border: 1px solid hsl(var(--primary) / 0.22); }
+  .badge-pending    { background: hsl(43 96% 56% / 0.14); color: hsl(43 96% 60%); border: 1px solid hsl(43 96% 56% / 0.22); }
+  .badge-error      { background: hsl(var(--destructive) / 0.14); color: hsl(var(--destructive)); border: 1px solid hsl(var(--destructive) / 0.22); }
 
-  /* ── AI sparkle accent ── */
+  /* ── AI accent — violet only ── */
   .ai-accent {
-    background: linear-gradient(135deg, hsl(var(--primary) / 0.15), hsl(var(--teal) / 0.08));
-    border: 1px solid hsl(var(--primary) / 0.2);
+    background: linear-gradient(135deg, hsl(var(--violet) / 0.14), hsl(var(--teal) / 0.07));
+    border: 1px solid hsl(var(--violet) / 0.20);
   }
 
-  /* ── Violet glow for AI elements ── */
-  .violet-glow {
-    box-shadow: 0 0 40px hsl(var(--primary) / 0.15), 0 0 80px hsl(var(--primary) / 0.06);
+  /* ── Amber glow for CTAs ── */
+  .amber-glow {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.14), 0 0 80px hsl(var(--primary) / 0.05);
   }
+
+  /* ── Violet glow for AI ── */
+  .violet-glow {
+    box-shadow: 0 0 40px hsl(var(--violet) / 0.14), 0 0 80px hsl(var(--violet) / 0.05);
+  }
+
+  /* ── Section divider — editorial rule ── */
+  .section-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
+  }
+
+  /* ── KPI metric display ── */
+  .kpi-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  /* ── Book grid ── */
   .book-grid {
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 1.25rem;
   }
   @media (min-width: 640px) {
     .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -203,8 +316,10 @@
     .book-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   @media (min-width: 1280px) {
-    .book-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .book-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }
   }
+
+  /* ── Page container ── */
   .page-container {
     max-width: 80rem;
     margin-left: auto;
@@ -218,34 +333,84 @@
   @media (min-width: 1024px) {
     .page-container { padding-left: 2rem; padding-right: 2rem; }
   }
+
+  /* ── Section heading ── */
   .section-heading {
-    font-size: 1.5rem;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.875rem;
     font-weight: 700;
     letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  /* ── Eyebrow label ── */
+  .eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ── Admin nav item ── */
+  .admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .admin-nav-item:hover {
+    background: hsl(var(--primary) / 0.10);
+    color: hsl(var(--primary));
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: hsl(var(--background)); }
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
 
-/* RTL */
+/* ── RTL ── */
 [dir="rtl"] .rtl-flip { transform: scaleX(-1); }
 
-/* Animations */
+/* ── Keyframes ── */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
 .animate-fade-in  { animation: fade-in  0.35s ease-out both; }
 .animate-slide-up { animation: slide-up 0.45s ease-out both; }
+.animate-float    { animation: float 6s ease-in-out infinite; }
 
-/* Hero orb animation durations */
-.orb-slow  { animation-duration: 8s; }
-.orb-slower { animation-duration: 12s; animation-delay: 2s; }
+/* Hero orb durations */
+.orb-slow   { animation-duration: 9s; }
+.orb-slower { animation-duration: 14s; animation-delay: 3s; }
+
+/* Shimmer skeleton */
+.shimmer {
+  background: linear-gradient(90deg, hsl(var(--muted)) 25%, hsl(var(--secondary)) 50%, hsl(var(--muted)) 75%);
+  background-size: 200% auto;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* Hide scrollbar but keep scroll */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

@@ -43,6 +43,21 @@ const config: Config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        amber: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        violet: {
+          DEFAULT: 'hsl(var(--violet))',
+          foreground: 'hsl(var(--violet-foreground))',
+        },
+        teal: {
+          DEFAULT: 'hsl(var(--teal))',
+        },
+        emerald: {
+          DEFAULT: 'hsl(var(--emerald))',
+          foreground: 'hsl(var(--emerald-foreground))',
+        },
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
@@ -58,6 +73,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'],
         arabic: ['Noto Sans Arabic', 'system-ui', 'sans-serif'],
       },
       animation: {

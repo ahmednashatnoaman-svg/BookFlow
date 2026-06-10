@@ -7,7 +7,7 @@ import {
 import { getLocale } from 'next-intl/server';
 import Header from '@/components/layout/Header';
 import { createClient } from '@/lib/supabase/server';
-import { formatRelativeTime, formatPrice } from '@/lib/utils';
+import { formatRelativeTime } from '@/lib/utils';
 
 interface UserStats {
   total_listings: number;
@@ -47,18 +47,18 @@ export default async function DashboardPage() {
   const us: UserStats = (userStatsRaw ?? {}) as UserStats;
 
   const primaryStats = [
-    { icon: BookOpen, label: locale === 'ar' ? 'الكتب المعروضة' : 'Active Listings', value: us.active_listings ?? 0, href: '/dashboard/listings', color: 'text-primary bg-primary/10' },
-    { icon: ArrowLeftRight, label: locale === 'ar' ? 'الطلبات المعلقة' : 'Pending Requests', value: us.requests_sent ?? 0, href: '/dashboard/requests', color: 'text-teal-400 bg-teal-400/10' },
-    { icon: Heart, label: locale === 'ar' ? 'قائمة الرغبات' : 'Wishlist', value: us.wishlist_count ?? 0, href: '/dashboard/wishlist', color: 'text-rose-400 bg-rose-400/10' },
-    { icon: TrendingUp, label: locale === 'ar' ? 'الصفقات المكتملة' : 'Completed Deals', value: us.total_transactions ?? 0, href: '/dashboard/history', color: 'text-amber-400 bg-amber-400/10' },
+    { icon: BookOpen, label: locale === 'ar' ? 'الكتب النشطة' : 'Active Listings', value: us.active_listings ?? 0, href: '/dashboard/listings', accent: 'text-primary', bg: 'bg-primary/10', glow: 'hover:shadow-primary/10' },
+    { icon: ArrowLeftRight, label: locale === 'ar' ? 'الطلبات المعلقة' : 'Pending Requests', value: us.requests_sent ?? 0, href: '/dashboard/requests', accent: 'text-[hsl(168_76%_42%)]', bg: 'bg-[hsl(168_76%_42%)]/10', glow: 'hover:shadow-teal-500/10' },
+    { icon: Heart, label: locale === 'ar' ? 'قائمة الرغبات' : 'Wishlist', value: us.wishlist_count ?? 0, href: '/dashboard/wishlist', accent: 'text-rose-400', bg: 'bg-rose-500/10', glow: 'hover:shadow-rose-500/10' },
+    { icon: TrendingUp, label: locale === 'ar' ? 'الصفقات المكتملة' : 'Completed', value: us.total_transactions ?? 0, href: '/dashboard/history', accent: 'text-primary', bg: 'bg-primary/10', glow: 'hover:shadow-primary/10' },
   ];
 
   const activityStats = [
-    { label: locale === 'ar' ? 'إجمالي الكتب' : 'Total Books', value: us.total_listings ?? 0, icon: BookOpen, color: 'text-primary' },
-    { label: locale === 'ar' ? 'مُباع' : 'Sold', value: us.books_sold ?? 0, icon: Star, color: 'text-green-400' },
-    { label: locale === 'ar' ? 'مُتبادل' : 'Exchanged', value: us.books_exchanged ?? 0, icon: ArrowLeftRight, color: 'text-teal-400' },
-    { label: locale === 'ar' ? 'مشاهدات' : 'Views', value: (us.total_views ?? 0).toLocaleString(), icon: Eye, color: 'text-blue-400' },
-    { label: locale === 'ar' ? 'طلبات استلمتها' : 'Requests In', value: us.requests_received ?? 0, icon: Activity, color: 'text-amber-400' },
+    { label: locale === 'ar' ? 'إجمالي' : 'Total', value: us.total_listings ?? 0, icon: BookOpen, color: 'text-primary' },
+    { label: locale === 'ar' ? 'مُباع' : 'Sold', value: us.books_sold ?? 0, icon: Star, color: 'text-emerald-400' },
+    { label: locale === 'ar' ? 'تبادل' : 'Exchanged', value: us.books_exchanged ?? 0, icon: ArrowLeftRight, color: 'text-[hsl(168_76%_42%)]' },
+    { label: locale === 'ar' ? 'مشاهدات' : 'Views', value: (us.total_views ?? 0).toLocaleString(), icon: Eye, color: 'text-primary/70' },
+    { label: locale === 'ar' ? 'طلبات' : 'Req. In', value: us.requests_received ?? 0, icon: Activity, color: 'text-primary' },
   ];
 
   const navItems = [
@@ -69,52 +69,66 @@ export default async function DashboardPage() {
     { href: '/dashboard/profile', icon: Star, label: locale === 'ar' ? 'الملف الشخصي' : 'Profile' },
   ];
 
+  const memberSince = us.member_since
+    ? new Date(us.member_since).toLocaleDateString(locale === 'ar' ? 'ar' : 'en-US', { month: 'long', year: 'numeric' })
+    : null;
+
   return (
     <div className="min-h-screen">
       <Header />
       <div className="page-container py-8">
-        {/* Welcome banner */}
-        <div className="glass-card p-5 mb-6 bg-gradient-to-r from-primary/10 to-teal-500/5 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold">
-              {locale === 'ar' ? `مرحباً، ${profile?.full_name}` : `Welcome back, ${profile?.full_name}`} 👋
-            </h1>
-            <p className="text-muted-foreground text-sm mt-0.5">
-              {us.member_since
-                ? (locale === 'ar' ? `عضو منذ ${new Date(us.member_since).toLocaleDateString('ar')}` : `Member since ${new Date(us.member_since).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`)
-                : (locale === 'ar' ? 'هنا لوحة تحكم حسابك' : "Here's your account overview")
-              }
-            </p>
+
+        {/* Welcome banner — editorial */}
+        <div className="relative glass-card p-6 mb-8 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/6 via-transparent to-[hsl(168_76%_42%)]/5 pointer-events-none rounded-xl" />
+          <div className="absolute bottom-0 right-0 w-48 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative flex items-start justify-between gap-4">
+            <div>
+              <p className="eyebrow text-primary mb-1.5">
+                {locale === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
+              </p>
+              <h1 className="font-display text-2xl font-bold mb-1">
+                {locale === 'ar' ? `مرحباً، ${profile?.full_name}` : `Welcome back, ${profile?.full_name}`}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {memberSince
+                  ? (locale === 'ar' ? `عضو منذ ${memberSince}` : `Member since ${memberSince}`)
+                  : (locale === 'ar' ? 'نظرة عامة على حسابك' : "Here's your account overview")
+                }
+              </p>
+            </div>
+            <Link href="/list-book" className="btn-primary shrink-0 text-sm py-2.5 px-4 rounded-xl">
+              <Plus className="w-4 h-4" />
+              {locale === 'ar' ? 'أضف كتاباً' : 'List Book'}
+            </Link>
           </div>
-          <Link href="/list-book"
-            className="flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            <Plus className="w-4 h-4" /> {locale === 'ar' ? 'أضف كتاباً' : 'List Book'}
-          </Link>
         </div>
 
-        {/* Primary stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        {/* Primary KPI stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           {primaryStats.map(stat => (
-            <Link key={stat.href} href={stat.href} className="glass-card p-4 hover:border-primary/40 transition-all group">
-              <div className={`w-10 h-10 rounded-xl ${stat.color} flex items-center justify-center mb-3`}>
-                <stat.icon className="w-5 h-5" />
+            <Link key={stat.href} href={stat.href}
+              className={`stat-card p-5 group hover:shadow-lg transition-all ${stat.glow}`}
+            >
+              <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center mb-4`}>
+                <stat.icon className={`w-5 h-5 ${stat.accent}`} />
               </div>
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-xs text-muted-foreground mt-0.5 flex items-center justify-between">
-                {stat.label} <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <p className={`kpi-value text-3xl ${stat.accent}`}>{stat.value}</p>
+              <p className="text-xs text-muted-foreground mt-1.5 flex items-center justify-between">
+                {stat.label}
+                <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity" />
               </p>
             </Link>
           ))}
         </div>
 
-        {/* Activity mini-stats */}
+        {/* Activity strip */}
         <div className="grid grid-cols-5 gap-3 mb-8">
           {activityStats.map(item => (
-            <div key={item.label} className="glass-card p-3 text-center">
-              <item.icon className={`w-4 h-4 ${item.color} mx-auto mb-1`} />
-              <p className={`text-lg font-bold ${item.color}`}>{item.value}</p>
-              <p className="text-[9px] text-muted-foreground leading-tight">{item.label}</p>
+            <div key={item.label} className="glass-card p-3.5 text-center">
+              <item.icon className={`w-4 h-4 ${item.color} mx-auto mb-1.5`} />
+              <p className={`font-display text-xl font-bold ${item.color}`}>{item.value}</p>
+              <p className="text-[9px] text-muted-foreground leading-tight mt-0.5">{item.label}</p>
             </div>
           ))}
         </div>
@@ -124,30 +138,43 @@ export default async function DashboardPage() {
           <div className="lg:col-span-2 space-y-6">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold">{locale === 'ar' ? 'آخر الإعلانات' : 'Recent Listings'}</h2>
-                <Link href="/dashboard/listings" className="text-xs text-primary hover:underline">{locale === 'ar' ? 'عرض الكل' : 'View all'}</Link>
+                <h2 className="font-display font-semibold text-lg">
+                  {locale === 'ar' ? 'آخر الإعلانات' : 'Recent Listings'}
+                </h2>
+                <Link href="/dashboard/listings" className="text-xs text-primary hover:text-primary/80 font-medium transition-colors">
+                  {locale === 'ar' ? 'عرض الكل' : 'View all'} →
+                </Link>
               </div>
               {recentListings && recentListings.length > 0 ? (
                 <div className="space-y-2">
                   {recentListings.map((listing: Record<string, unknown>) => {
                     const cat = listing.category as { icon?: string } | null;
                     return (
-                      <div key={listing.id as string} className="glass-card p-3 flex items-center gap-3">
-                        <div className="w-10 h-12 rounded-lg bg-muted/40 flex-shrink-0 flex items-center justify-center text-lg">
+                      <div key={listing.id as string}
+                        className="glass-card-hover p-3.5 flex items-center gap-3"
+                      >
+                        <div className="w-10 h-12 rounded-lg bg-muted/40 flex-shrink-0 flex items-center justify-center text-xl">
                           {cat?.icon ?? '📚'}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <Link href={`/books/${listing.id}`} className="text-sm font-semibold truncate block hover:text-primary transition-colors">{listing.title as string}</Link>
-                          <p className="text-xs text-muted-foreground">{listing.author as string}</p>
+                          <Link href={`/books/${listing.id}`}
+                            className="text-sm font-semibold truncate block hover:text-primary transition-colors"
+                          >
+                            {listing.title as string}
+                          </Link>
+                          <p className="text-xs text-muted-foreground truncate">{listing.author as string}</p>
                           <p className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1">
-                            <Eye className="w-2.5 h-2.5" />{listing.view_count as number} views · {formatRelativeTime(listing.created_at as string, locale)}
+                            <Eye className="w-2.5 h-2.5" />
+                            {listing.view_count as number} · {formatRelativeTime(listing.created_at as string, locale)}
                           </p>
                         </div>
-                        <div className="text-end flex-shrink-0 flex items-center gap-2">
-                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${listing.status === 'available' ? 'bg-green-500/10 text-green-500' : 'bg-muted text-muted-foreground'}`}>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            listing.status === 'available' ? 'badge-available' : 'badge-sold'
+                          }`}>
                             {listing.status as string}
                           </span>
-                          <Link href={`/dashboard/listings/${listing.id}/edit`}
+                          <Link href={`/dashboard/listings/${listing.id as string}/edit`}
                             className="p-1.5 hover:bg-muted/50 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -158,10 +185,14 @@ export default async function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <div className="glass-card p-8 text-center">
-                  <BookOpen className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground mb-3">{locale === 'ar' ? 'لا توجد إعلانات بعد' : 'No listings yet'}</p>
-                  <Link href="/list-book" className="text-primary text-sm hover:underline font-medium">{locale === 'ar' ? 'أضف كتابك الأول' : 'List your first book'}</Link>
+                <div className="glass-card p-10 text-center">
+                  <BookOpen className="w-10 h-10 text-muted-foreground/25 mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {locale === 'ar' ? 'لا توجد إعلانات بعد' : 'No listings yet'}
+                  </p>
+                  <Link href="/list-book" className="btn-ghost-amber text-xs py-2 px-4">
+                    {locale === 'ar' ? 'أضف كتابك الأول' : 'List your first book'}
+                  </Link>
                 </div>
               )}
             </div>
@@ -170,19 +201,27 @@ export default async function DashboardPage() {
             {pendingRequests && pendingRequests.length > 0 && (
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-semibold">{locale === 'ar' ? 'الطلبات المعلقة' : 'Pending Requests'}</h2>
-                  <Link href="/dashboard/requests" className="text-xs text-primary hover:underline">{locale === 'ar' ? 'عرض الكل' : 'View all'}</Link>
+                  <h2 className="font-display font-semibold text-lg">
+                    {locale === 'ar' ? 'الطلبات المعلقة' : 'Pending Requests'}
+                  </h2>
+                  <Link href="/dashboard/requests" className="text-xs text-primary hover:text-primary/80 font-medium transition-colors">
+                    {locale === 'ar' ? 'عرض الكل' : 'View all'} →
+                  </Link>
                 </div>
                 <div className="space-y-2">
                   {pendingRequests.map((req: Record<string, unknown>) => {
                     const listing = req.listing as { title: string } | null;
                     return (
-                      <div key={req.id as string} className="glass-card p-3 flex items-center justify-between gap-3">
+                      <div key={req.id as string}
+                        className="glass-card p-3.5 flex items-center justify-between gap-3"
+                      >
                         <div className="min-w-0">
                           <p className="text-xs font-semibold truncate">{listing?.title ?? 'Book'}</p>
-                          <p className="text-[10px] text-muted-foreground">{formatRelativeTime(req.created_at as string, locale)}</p>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                            {formatRelativeTime(req.created_at as string, locale)}
+                          </p>
                         </div>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-semibold flex-shrink-0">
+                        <span className="badge-pending text-[10px] font-bold px-2.5 py-0.5 rounded-full flex-shrink-0">
                           pending
                         </span>
                       </div>
@@ -196,14 +235,15 @@ export default async function DashboardPage() {
           {/* Sidebar */}
           <div className="space-y-4">
             {/* Quick nav */}
-            <div className="glass-card p-3 space-y-1">
+            <div className="glass-card p-3">
+              <p className="eyebrow text-muted-foreground px-3 py-1 mb-1">
+                {locale === 'ar' ? 'التنقل السريع' : 'Quick Nav'}
+              </p>
               {navItems.map(item => (
-                <Link key={item.href} href={item.href}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/40 transition-colors text-sm"
-                >
-                  <item.icon className="w-4 h-4 text-muted-foreground" />
+                <Link key={item.href} href={item.href} className="admin-nav-item">
+                  <item.icon className="w-4 h-4" />
                   {item.label}
-                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground ms-auto" />
+                  <ChevronRight className="w-3.5 h-3.5 ms-auto" />
                 </Link>
               ))}
             </div>
@@ -212,11 +252,17 @@ export default async function DashboardPage() {
             {notifications && notifications.length > 0 && (
               <div className="glass-card p-4">
                 <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-primary" /> {locale === 'ar' ? 'الإشعارات الجديدة' : 'New Notifications'}
+                  <Bell className="w-4 h-4 text-primary" />
+                  {locale === 'ar' ? 'إشعارات جديدة' : 'New Notifications'}
+                  <span className="ms-auto badge-new text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                    {notifications.length}
+                  </span>
                 </h3>
                 <div className="space-y-2">
                   {notifications.map((n: Record<string, unknown>) => (
-                    <div key={n.id as string} className="p-2.5 bg-primary/5 rounded-lg border border-primary/10">
+                    <div key={n.id as string}
+                      className="p-2.5 bg-primary/6 rounded-lg border border-primary/10"
+                    >
                       <p className="text-xs font-semibold">{n.title as string}</p>
                       <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2">{n.body as string}</p>
                     </div>

@@ -75,11 +75,11 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-teal-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
               <BookOpen className="w-4 h-4 text-white" />
             </div>
-            <span className="gradient-text">BookFlow</span>
+            <span className="font-display font-bold text-lg gradient-text">BookFlow</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -128,7 +128,7 @@ export default function Header() {
                   <button type="button" onClick={() => setProfileOpen(!profileOpen)}
                     className="flex items-center gap-1.5 p-1.5 hover:bg-muted/50 rounded-lg transition-colors"
                   >
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-xs font-bold text-white">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-teal-500 flex items-center justify-center text-xs font-bold text-white shadow-sm">
                       {user.full_name?.[0]?.toUpperCase() ?? 'U'}
                     </div>
                     <ChevronDown className="w-3.5 h-3.5 text-muted-foreground hidden sm:block" />
