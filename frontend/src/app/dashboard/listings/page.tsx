@@ -21,7 +21,7 @@ const STATUS_CONFIG: Record<ListingStatus, { label: string; color: string; icon:
   unavailable: { label: 'Unavailable', color: 'bg-destructive/10 text-destructive', icon: XCircle },
 };
 
-const STATUS_OPTIONS: ListingStatus[] = ['available', 'unavailable'];
+const STATUS_OPTIONS: ListingStatus[] = ['available', 'sold', 'exchanged', 'unavailable'];
 
 export default function MyListingsPage() {
   const [listings, setListings] = useState<BookListing[]>([]);

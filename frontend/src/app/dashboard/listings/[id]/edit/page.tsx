@@ -12,6 +12,22 @@ import type { Category, BookListing, BookCondition, ListingType } from '@/types'
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
+const CURRENCIES = [
+  { code: 'EGP', label: 'جنيه مصري (EGP)', labelEn: 'Egyptian Pound (EGP)' },
+  { code: 'USD', label: 'دولار أمريكي (USD)', labelEn: 'US Dollar (USD)' },
+  { code: 'EUR', label: 'يورو (EUR)', labelEn: 'Euro (EUR)' },
+  { code: 'SAR', label: 'ريال سعودي (SAR)', labelEn: 'Saudi Riyal (SAR)' },
+  { code: 'AED', label: 'درهم إماراتي (AED)', labelEn: 'UAE Dirham (AED)' },
+  { code: 'GBP', label: 'جنيه إسترليني (GBP)', labelEn: 'British Pound (GBP)' },
+];
+
+const EGYPT_CITIES = [
+  'القاهرة', 'الإسكندرية', 'الجيزة', 'الإسماعيلية', 'بورسعيد',
+  'السويس', 'المنصورة', 'طنطا', 'أسيوط', 'أسوان',
+  'Cairo', 'Alexandria', 'Giza', 'Ismailia', 'Port Said',
+  'Suez', 'Mansoura', 'Tanta', 'Assiut', 'Aswan',
+];
+
 export default function EditBookPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
@@ -25,8 +41,8 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
   const [form, setForm] = useState({
     title: '', author: '', isbn: '', category_id: '',
     condition: 'good' as BookCondition, listing_type: 'sale' as ListingType,
-    price: '', description: '', publisher: '',
-    published_year: '', language: 'en', city: '', status: 'available',
+    price: '', currency: 'EGP', description: '', publisher: '',
+    published_year: '', language: 'ar', city: '', status: 'available',
   });
 
   useEffect(() => {
@@ -40,10 +56,11 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
         condition: book.condition,
         listing_type: book.listing_type,
         price: book.price?.toString() ?? '',
+        currency: book.currency ?? 'EGP',
         description: book.description ?? '',
         publisher: book.publisher ?? '',
         published_year: book.published_year?.toString() ?? '',
-        language: book.language ?? 'en',
+        language: book.language ?? 'ar',
         city: book.city ?? '',
         status: book.status,
       });
@@ -52,10 +69,10 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
       setImages(imgs);
       setLoading(false);
     }).catch(() => {
-      toast.error('Listing not found');
+      toast.error(locale === 'ar' ? 'لم يتم العثور على الإعلان' : 'Listing not found');
       router.push('/dashboard/listings');
     });
-  }, [id, router]);
+  }, [id, router, locale]);
 
   const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -102,7 +119,7 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
       toast.success(locale === 'ar' ? 'تم تحديث الكتاب بنجاح!' : 'Listing updated successfully!');
       router.push('/dashboard/listings');
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Failed to update listing';
+      const msg = e instanceof Error ? e.message : (locale === 'ar' ? 'فشل تحديث الكتاب' : 'Failed to update listing');
       toast.error(msg);
     } finally {
       setSaving(false);
@@ -131,8 +148,8 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
           <Link href="/dashboard/listings"
             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            {locale === 'ar' ? 'العودة إلى قوائمي' : 'Back to My Listings'}
+            <ArrowLeft className="w-4 h-4 rtl-flip" />
+            {locale === 'ar' ? 'العودة إلى كتبي' : 'Back to My Listings'}
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <BookOpen className="w-6 h-6 text-primary" />
@@ -152,7 +169,7 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
                 <div key={i} className="relative w-20 h-24">
                   <Image src={img.preview} alt="" fill className="object-cover rounded-lg" />
                   <button type="button" onClick={() => setImages(prev => prev.filter((_, j) => j !== i))}
-                    aria-label="Remove image"
+                    aria-label={locale === 'ar' ? 'حذف الصورة' : 'Remove image'}
                     className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-destructive text-white rounded-full flex items-center justify-center"
                   >
                     <X className="w-3 h-3" />
@@ -167,7 +184,9 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
                   {locale === 'ar' ? 'رفع' : 'Upload'}
                 </button>
               )}
-              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" aria-label="Upload images" onChange={handleImageAdd} />
+              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden"
+                aria-label={locale === 'ar' ? 'رفع صور' : 'Upload images'}
+                onChange={handleImageAdd} />
             </div>
           </div>
 
@@ -175,20 +194,25 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
           <div className="glass-card p-4 space-y-4">
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'عنوان الكتاب *' : 'Book Title *'}</label>
-              <input aria-label="Book title" value={form.title} onChange={e => setForm(p => ({...p, title: e.target.value}))} required className={inputClass} />
+              <input aria-label="Book title" value={form.title}
+                onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required className={inputClass} />
             </div>
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'المؤلف *' : 'Author *'}</label>
-              <input aria-label="Author" value={form.author} onChange={e => setForm(p => ({...p, author: e.target.value}))} required className={inputClass} />
+              <input aria-label="Author" value={form.author}
+                onChange={e => setForm(p => ({ ...p, author: e.target.value }))} required className={inputClass} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'الناشر' : 'Publisher'}</label>
-                <input aria-label="Publisher" value={form.publisher} onChange={e => setForm(p => ({...p, publisher: e.target.value}))} className={inputClass} />
+                <input aria-label="Publisher" value={form.publisher}
+                  onChange={e => setForm(p => ({ ...p, publisher: e.target.value }))} className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'سنة النشر' : 'Year'}</label>
-                <input aria-label="Published year" type="number" value={form.published_year} onChange={e => setForm(p => ({...p, published_year: e.target.value}))} className={inputClass} min="1800" max={new Date().getFullYear()} />
+                <input aria-label="Published year" type="number" value={form.published_year}
+                  onChange={e => setForm(p => ({ ...p, published_year: e.target.value }))}
+                  className={inputClass} min="1800" max={new Date().getFullYear()} />
               </div>
             </div>
           </div>
@@ -197,34 +221,54 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
           <div className="glass-card p-4 space-y-4">
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'الفئة *' : 'Category *'}</label>
-              <select aria-label="Category" value={form.category_id} onChange={e => setForm(p => ({...p, category_id: e.target.value}))} required className={inputClass}>
+              <select aria-label="Category" value={form.category_id}
+                onChange={e => setForm(p => ({ ...p, category_id: e.target.value }))} required className={inputClass}>
                 <option value="">{locale === 'ar' ? 'اختر فئة' : 'Select category'}</option>
                 {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.icon} {cat[`name_${locale}`]}</option>
+                  <option key={cat.id} value={cat.id}>{cat.icon} {locale === 'ar' ? cat.name_ar : cat.name_en}</option>
                 ))}
               </select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'الحالة *' : 'Condition *'}</label>
-                <select aria-label="Condition" value={form.condition} onChange={e => setForm(p => ({...p, condition: e.target.value as BookCondition}))} className={inputClass}>
-                  {(['new','good','acceptable','poor'] as BookCondition[]).map(c => (
-                    <option key={c} value={c}>{c === 'new' ? (locale === 'ar' ? 'جديد' : 'New') : c === 'good' ? (locale === 'ar' ? 'جيد' : 'Good') : c === 'acceptable' ? (locale === 'ar' ? 'مقبول' : 'Acceptable') : (locale === 'ar' ? 'سيء' : 'Poor')}</option>
-                  ))}
+                <select aria-label="Condition" value={form.condition}
+                  onChange={e => setForm(p => ({ ...p, condition: e.target.value as BookCondition }))} className={inputClass}>
+                  <option value="new">{locale === 'ar' ? 'جديد' : 'New'}</option>
+                  <option value="good">{locale === 'ar' ? 'جيد' : 'Good'}</option>
+                  <option value="acceptable">{locale === 'ar' ? 'مقبول' : 'Acceptable'}</option>
+                  <option value="poor">{locale === 'ar' ? 'سيء' : 'Poor'}</option>
                 </select>
               </div>
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'نوع الإعلان *' : 'Listing Type *'}</label>
-                <select aria-label="Listing type" value={form.listing_type} onChange={e => setForm(p => ({...p, listing_type: e.target.value as ListingType}))} className={inputClass}>
+                <select aria-label="Listing type" value={form.listing_type}
+                  onChange={e => setForm(p => ({ ...p, listing_type: e.target.value as ListingType }))} className={inputClass}>
                   <option value="sale">{locale === 'ar' ? 'للبيع' : 'For Sale'}</option>
                   <option value="exchange">{locale === 'ar' ? 'للتبادل' : 'For Exchange'}</option>
                 </select>
               </div>
             </div>
+
             {form.listing_type === 'sale' && (
-              <div>
-                <label className={labelClass}>{locale === 'ar' ? 'السعر (ريال)' : 'Price (SAR)'}</label>
-                <input aria-label="Price in SAR" type="number" value={form.price} onChange={e => setForm(p => ({...p, price: e.target.value}))} className={inputClass} min="0" step="0.5" />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={labelClass}>{locale === 'ar' ? 'السعر' : 'Price'}</label>
+                  <input aria-label="Price" type="number" value={form.price}
+                    onChange={e => setForm(p => ({ ...p, price: e.target.value }))}
+                    className={inputClass} min="0" step="0.5" />
+                </div>
+                <div>
+                  <label className={labelClass}>{locale === 'ar' ? 'العملة' : 'Currency'}</label>
+                  <select aria-label="Currency" value={form.currency}
+                    onChange={e => setForm(p => ({ ...p, currency: e.target.value }))} className={inputClass}>
+                    {CURRENCIES.map(c => (
+                      <option key={c.code} value={c.code}>
+                        {locale === 'ar' ? c.label : c.labelEn}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             )}
           </div>
@@ -233,18 +277,30 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
           <div className="glass-card p-4 space-y-4">
             <div>
               <label className={labelClass}>{locale === 'ar' ? 'الوصف' : 'Description'}</label>
-              <textarea aria-label="Description" value={form.description} onChange={e => setForm(p => ({...p, description: e.target.value}))} rows={4} className={cn(inputClass, 'resize-none')} />
+              <textarea aria-label="Description" value={form.description}
+                onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
+                rows={4} className={cn(inputClass, 'resize-none')} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass}>{locale === 'ar' ? 'المدينة' : 'City'}</label>
-                <input aria-label="City" value={form.city} onChange={e => setForm(p => ({...p, city: e.target.value}))} className={inputClass} />
+                <input aria-label="City" value={form.city}
+                  onChange={e => setForm(p => ({ ...p, city: e.target.value }))}
+                  list="edit-city-suggestions"
+                  className={inputClass}
+                  placeholder={locale === 'ar' ? 'مثال: القاهرة' : 'e.g. Cairo'} />
+                <datalist id="edit-city-suggestions">
+                  {EGYPT_CITIES.map(c => <option key={c} value={c} />)}
+                </datalist>
               </div>
               <div>
-                <label className={labelClass}>{locale === 'ar' ? 'اللغة' : 'Language'}</label>
-                <select aria-label="Language" value={form.language} onChange={e => setForm(p => ({...p, language: e.target.value}))} className={inputClass}>
-                  <option value="en">English</option>
+                <label className={labelClass}>{locale === 'ar' ? 'لغة الكتاب' : 'Book Language'}</label>
+                <select aria-label="Language" value={form.language}
+                  onChange={e => setForm(p => ({ ...p, language: e.target.value }))} className={inputClass}>
                   <option value="ar">العربية</option>
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                  <option value="other">{locale === 'ar' ? 'أخرى' : 'Other'}</option>
                 </select>
               </div>
             </div>
@@ -253,9 +309,12 @@ export default function EditBookPage({ params }: { params: Promise<{ id: string 
           {/* Status */}
           <div className="glass-card p-4">
             <label className={labelClass}>{locale === 'ar' ? 'حالة الإعلان' : 'Listing Status'}</label>
-            <select aria-label="Listing status" value={form.status} onChange={e => setForm(p => ({...p, status: e.target.value}))} className={inputClass}>
+            <select aria-label="Listing status" value={form.status}
+              onChange={e => setForm(p => ({ ...p, status: e.target.value }))} className={inputClass}>
               <option value="available">{locale === 'ar' ? 'متاح' : 'Available'}</option>
               <option value="unavailable">{locale === 'ar' ? 'غير متاح' : 'Unavailable'}</option>
+              <option value="sold">{locale === 'ar' ? 'مُباع' : 'Sold'}</option>
+              <option value="exchanged">{locale === 'ar' ? 'تم التبادل' : 'Exchanged'}</option>
             </select>
           </div>
 

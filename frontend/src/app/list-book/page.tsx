@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Upload, X, Scan, Plus, Loader2, BookOpen } from 'lucide-react';
@@ -11,7 +11,22 @@ import ISBNScanner from '@/components/ai/ISBNScanner';
 import { booksApi, categoriesApi, uploadApi } from '@/lib/api';
 import type { Category, BookListing, BookCondition, ListingType } from '@/types';
 import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
+
+const CURRENCIES = [
+  { code: 'EGP', label: 'جنيه مصري (EGP)', labelEn: 'Egyptian Pound (EGP)' },
+  { code: 'USD', label: 'دولار أمريكي (USD)', labelEn: 'US Dollar (USD)' },
+  { code: 'EUR', label: 'يورو (EUR)', labelEn: 'Euro (EUR)' },
+  { code: 'SAR', label: 'ريال سعودي (SAR)', labelEn: 'Saudi Riyal (SAR)' },
+  { code: 'AED', label: 'درهم إماراتي (AED)', labelEn: 'UAE Dirham (AED)' },
+  { code: 'GBP', label: 'جنيه إسترليني (GBP)', labelEn: 'British Pound (GBP)' },
+];
+
+const EGYPT_CITIES = [
+  'القاهرة', 'الإسكندرية', 'الجيزة', 'الإسماعيلية', 'بورسعيد',
+  'السويس', 'المنصورة', 'طنطا', 'أسيوط', 'أسوان',
+  'Cairo', 'Alexandria', 'Giza', 'Ismailia', 'Port Said',
+  'Suez', 'Mansoura', 'Tanta', 'Assiut', 'Aswan',
+];
 
 export default function ListBookPage() {
   const router = useRouter();
@@ -23,12 +38,12 @@ export default function ListBookPage() {
   const [form, setForm] = useState({
     title: '', author: '', isbn: '', category_id: '',
     condition: 'good' as BookCondition, listing_type: 'sale' as ListingType,
-    price: '', description: '', publisher: '',
-    published_year: '', language: 'en', city: '',
+    price: '', currency: 'EGP', description: '', publisher: '',
+    published_year: '', language: locale === 'ar' ? 'ar' : 'en', city: '',
   });
 
   useEffect(() => {
-    categoriesApi.list().then(setCategories).catch(() => { });
+    categoriesApi.list().then(setCategories).catch(() => {});
   }, []);
 
   const handleISBNData = (data: Partial<BookListing>) => {
@@ -141,7 +156,9 @@ export default function ListBookPage() {
                   {locale === 'ar' ? 'رفع' : 'Upload'}
                 </button>
               )}
-              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" aria-label={locale === 'ar' ? 'رفع صور الكتاب' : 'Upload book images'} onChange={handleImageAdd} />
+              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden"
+                aria-label={locale === 'ar' ? 'رفع صور الكتاب' : 'Upload book images'}
+                onChange={handleImageAdd} />
             </div>
           </div>
 
@@ -162,7 +179,9 @@ export default function ListBookPage() {
               </div>
               <div>
                 <label htmlFor="book-year" className={labelClass}>{locale === 'ar' ? 'سنة النشر' : 'Year'}</label>
-                <input id="book-year" type="number" value={form.published_year} onChange={e => setForm(p => ({ ...p, published_year: e.target.value }))} className={inputClass} min="1800" max={new Date().getFullYear()} />
+                <input id="book-year" type="number" value={form.published_year}
+                  onChange={e => setForm(p => ({ ...p, published_year: e.target.value }))}
+                  className={inputClass} min="1800" max={new Date().getFullYear()} />
               </div>
             </div>
           </div>
@@ -171,34 +190,54 @@ export default function ListBookPage() {
           <div className="glass-card p-4 space-y-4">
             <div>
               <label htmlFor="book-category" className={labelClass}>{locale === 'ar' ? 'الفئة *' : 'Category *'}</label>
-              <select id="book-category" value={form.category_id} onChange={e => setForm(p => ({ ...p, category_id: e.target.value }))} required className={inputClass}>
+              <select id="book-category" value={form.category_id}
+                onChange={e => setForm(p => ({ ...p, category_id: e.target.value }))} required className={inputClass}>
                 <option value="">{locale === 'ar' ? 'اختر فئة' : 'Select category'}</option>
                 {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.icon} {cat[`name_${locale}`]}</option>
+                  <option key={cat.id} value={cat.id}>{cat.icon} {locale === 'ar' ? cat.name_ar : cat.name_en}</option>
                 ))}
               </select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label htmlFor="book-condition" className={labelClass}>{locale === 'ar' ? 'الحالة *' : 'Condition *'}</label>
-                <select id="book-condition" value={form.condition} onChange={e => setForm(p => ({ ...p, condition: e.target.value as BookCondition }))} className={inputClass}>
-                  {(['new', 'good', 'acceptable', 'poor'] as BookCondition[]).map(c => (
-                    <option key={c} value={c}>{c === 'new' ? (locale === 'ar' ? 'جديد' : 'New') : c === 'good' ? (locale === 'ar' ? 'جيد' : 'Good') : c === 'acceptable' ? (locale === 'ar' ? 'مقبول' : 'Acceptable') : (locale === 'ar' ? 'سيء' : 'Poor')}</option>
-                  ))}
+                <select id="book-condition" value={form.condition}
+                  onChange={e => setForm(p => ({ ...p, condition: e.target.value as BookCondition }))} className={inputClass}>
+                  <option value="new">{locale === 'ar' ? 'جديد' : 'New'}</option>
+                  <option value="good">{locale === 'ar' ? 'جيد' : 'Good'}</option>
+                  <option value="acceptable">{locale === 'ar' ? 'مقبول' : 'Acceptable'}</option>
+                  <option value="poor">{locale === 'ar' ? 'سيء' : 'Poor'}</option>
                 </select>
               </div>
               <div>
                 <label htmlFor="book-listing-type" className={labelClass}>{locale === 'ar' ? 'نوع الإعلان *' : 'Listing Type *'}</label>
-                <select id="book-listing-type" value={form.listing_type} onChange={e => setForm(p => ({ ...p, listing_type: e.target.value as ListingType }))} className={inputClass}>
+                <select id="book-listing-type" value={form.listing_type}
+                  onChange={e => setForm(p => ({ ...p, listing_type: e.target.value as ListingType }))} className={inputClass}>
                   <option value="sale">{locale === 'ar' ? 'للبيع' : 'For Sale'}</option>
                   <option value="exchange">{locale === 'ar' ? 'للتبادل' : 'For Exchange'}</option>
                 </select>
               </div>
             </div>
+
             {form.listing_type === 'sale' && (
-              <div>
-                <label htmlFor="book-price" className={labelClass}>{locale === 'ar' ? 'السعر (ريال)' : 'Price (SAR)'}</label>
-                <input id="book-price" type="number" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} className={inputClass} min="0" step="0.5" />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="book-price" className={labelClass}>{locale === 'ar' ? 'السعر' : 'Price'}</label>
+                  <input id="book-price" type="number" value={form.price}
+                    onChange={e => setForm(p => ({ ...p, price: e.target.value }))}
+                    className={inputClass} min="0" step="0.5" placeholder="0" />
+                </div>
+                <div>
+                  <label htmlFor="book-currency" className={labelClass}>{locale === 'ar' ? 'العملة' : 'Currency'}</label>
+                  <select id="book-currency" value={form.currency}
+                    onChange={e => setForm(p => ({ ...p, currency: e.target.value }))} className={inputClass}>
+                    {CURRENCIES.map(c => (
+                      <option key={c.code} value={c.code}>
+                        {locale === 'ar' ? c.label : c.labelEn}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             )}
           </div>
@@ -207,18 +246,30 @@ export default function ListBookPage() {
           <div className="glass-card p-4 space-y-4">
             <div>
               <label htmlFor="book-description" className={labelClass}>{locale === 'ar' ? 'الوصف' : 'Description'}</label>
-              <textarea id="book-description" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={4} className={cn(inputClass, 'resize-none')} />
+              <textarea id="book-description" value={form.description}
+                onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
+                rows={4} className={cn(inputClass, 'resize-none')} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label htmlFor="book-city" className={labelClass}>{locale === 'ar' ? 'المدينة' : 'City'}</label>
-                <input id="book-city" value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} className={inputClass} />
+                <input id="book-city" value={form.city}
+                  onChange={e => setForm(p => ({ ...p, city: e.target.value }))}
+                  list="city-suggestions"
+                  className={inputClass}
+                  placeholder={locale === 'ar' ? 'مثال: القاهرة' : 'e.g. Cairo'} />
+                <datalist id="city-suggestions">
+                  {EGYPT_CITIES.map(c => <option key={c} value={c} />)}
+                </datalist>
               </div>
               <div>
-                <label htmlFor="book-language" className={labelClass}>{locale === 'ar' ? 'اللغة' : 'Language'}</label>
-                <select id="book-language" value={form.language} onChange={e => setForm(p => ({ ...p, language: e.target.value }))} className={inputClass}>
-                  <option value="en">English</option>
+                <label htmlFor="book-language" className={labelClass}>{locale === 'ar' ? 'لغة الكتاب' : 'Book Language'}</label>
+                <select id="book-language" value={form.language}
+                  onChange={e => setForm(p => ({ ...p, language: e.target.value }))} className={inputClass}>
                   <option value="ar">العربية</option>
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                  <option value="other">{locale === 'ar' ? 'أخرى' : 'Other'}</option>
                 </select>
               </div>
             </div>
@@ -227,7 +278,10 @@ export default function ListBookPage() {
           <button type="submit" disabled={loading}
             className="w-full flex items-center justify-center gap-2 py-3.5 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 disabled:opacity-60"
           >
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin" />{locale === 'ar' ? 'جارٍ النشر...' : 'Publishing...'}</> : <><Plus className="w-4 h-4" />{locale === 'ar' ? 'نشر الكتاب' : 'Publish Listing'}</>}
+            {loading
+              ? <><Loader2 className="w-4 h-4 animate-spin" />{locale === 'ar' ? 'جارٍ النشر...' : 'Publishing...'}</>
+              : <><Plus className="w-4 h-4" />{locale === 'ar' ? 'نشر الكتاب' : 'Publish Listing'}</>
+            }
           </button>
         </form>
       </div>

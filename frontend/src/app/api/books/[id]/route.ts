@@ -35,7 +35,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 
   // Whitelist allowed update fields
   const allowed = ['title', 'author', 'isbn', 'category_id', 'condition', 'listing_type', 'price',
-                   'description', 'images', 'cover_image', 'language', 'city', 'publisher',
+                   'currency', 'description', 'images', 'cover_image', 'language', 'city', 'publisher',
                    'published_year', 'status'];
   const sanitized: Record<string, unknown> = {};
   for (const key of allowed) {

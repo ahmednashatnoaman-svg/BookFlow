@@ -105,7 +105,7 @@ export default async function HomePage() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/15 text-primary text-xs font-bold mb-8 tracking-wide">
             <Sparkles className="w-3 h-3" />
-            AI-Powered Book Marketplace · Saudi Arabia & MENA
+            AI-Powered Book Marketplace · Egypt
           </div>
 
           {/* Headline — Playfair Display */}
@@ -116,7 +116,7 @@ export default async function HomePage() {
 
           {/* Subheading */}
           <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-            The smartest way to buy, sell, and exchange books in Saudi Arabia.
+            The smartest way to buy, sell, and exchange books in Egypt.
             Powered by AI that understands what you&apos;re looking for.
           </p>
 
@@ -317,7 +317,7 @@ export default async function HomePage() {
           <p className="eyebrow text-primary mb-4">Get Started</p>
           <h2 className="section-heading text-4xl sm:text-5xl mb-4">Ready to Clear Your Shelf?</h2>
           <p className="text-muted-foreground text-lg mb-10 max-w-md mx-auto font-light">
-            Join thousands of readers exchanging books across Saudi Arabia.
+            Join thousands of readers exchanging books across Egypt.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link href="/auth/register" className="btn-primary text-base px-8 py-4 rounded-xl">
@@ -345,7 +345,7 @@ export default async function HomePage() {
                 <span className="gradient-text">BookFlow</span>
               </Link>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Saudi Arabia&apos;s AI-powered peer-to-peer book exchange marketplace.
+                Egypt&apos;s AI-powered book marketplace — buy, sell &amp; exchange.
               </p>
             </div>
 

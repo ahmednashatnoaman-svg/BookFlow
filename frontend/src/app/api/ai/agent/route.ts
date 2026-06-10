@@ -10,14 +10,15 @@ const GROQ_TOOL_MODELS = [
   'llama3-groq-8b-8192-tool-use-preview',
 ];
 
-const SYSTEM_PROMPT = `You are BookFlow's smart book assistant — friendly and expert, helping users discover books on a peer-to-peer marketplace in Saudi Arabia and the MENA region.
+const SYSTEM_PROMPT = `You are BookFlow's smart book assistant — friendly and expert, helping users discover books on a peer-to-peer marketplace in Egypt and the Arab world.
 
 When users ask to find, search, or browse books, use the search_books function to query real listings.
 
 Capabilities:
-- Natural language search: "find me a thriller under 50 SAR in good condition"
+- Natural language search: "find me a thriller under 100 EGP in good condition"
 - Price, condition, city, language, listing_type filters
 - Sort: newest, cheapest first, most expensive first
+- Egyptian cities: Cairo (القاهرة), Alexandria (الإسكندرية), Giza (الجيزة), Mansoura, Tanta, etc.
 
 After searching, present results conversationally. Mention title, author, price/type, condition, city.
 If no results, suggest adjustments.
@@ -33,8 +34,8 @@ const SEARCH_TOOL: Groq.Chat.Completions.ChatCompletionTool = {
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Text search for title, author, or description.' },
-        min_price: { type: 'number', description: 'Minimum price in SAR.' },
-        max_price: { type: 'number', description: 'Maximum price in SAR.' },
+        min_price: { type: 'number', description: 'Minimum price in EGP.' },
+        max_price: { type: 'number', description: 'Maximum price in EGP.' },
         condition: {
           type: 'array',
           items: { type: 'string', enum: ['new', 'good', 'acceptable', 'poor'] },

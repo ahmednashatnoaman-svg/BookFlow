@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import { createClient } from '@/lib/supabase/server';
 
+function containsArabic(text: string): boolean {
+  return /[؀-ۿݐ-ݿ]/.test(text);
+}
+
 export async function POST(request: NextRequest) {
   const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'placeholder' });
   const { listing_id, message } = await request.json();
@@ -15,10 +19,16 @@ export async function POST(request: NextRequest) {
 
   if (!book) return NextResponse.json({ error: 'Book not found' }, { status: 404 });
 
-  const lang = book.language ?? 'en';
-  const systemPrompt = `You are an enthusiastic reading assistant helping a user understand the book "${book.title}" by ${book.author}.
+  // Detect language from the user's message, not from book.language
+  const isArabic = containsArabic(message) || book.language === 'ar';
+
+  const systemPrompt = isArabic
+    ? `أنت مساعد قراءة متحمس تساعد المستخدم على فهم كتاب "${book.title}" للمؤلف ${book.author}.
+الوصف: ${book.description ?? 'غير متوفر'}
+أجب دائماً باللغة العربية. كن مفيداً وموجزاً ومتحمساً للكتب.`
+    : `You are an enthusiastic reading assistant helping a user understand the book "${book.title}" by ${book.author}.
 Description: ${book.description ?? 'Not provided'}
-${lang === 'ar' ? 'أجب باللغة العربية فقط. كن مفيداً وموجزاً ومتحمساً للكتب.' : 'Respond in English only. Be helpful, concise, and enthusiastic about books.'}`;
+Respond in English. Be helpful, concise, and enthusiastic about books.`;
 
   try {
     const response = await groq.chat.completions.create({

@@ -6,13 +6,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatPrice(price: number | null, locale: string = 'en'): string {
+export function formatPrice(price: number | null, locale: string = 'en', currency: string = 'EGP'): string {
   if (price === null) return locale === 'ar' ? 'مجاناً (تبادل)' : 'Free (Exchange)';
-  return new Intl.NumberFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    maximumFractionDigits: 0,
-  }).format(price);
+  const intlLocale = locale === 'ar' ? 'ar-EG' : 'en-US';
+  try {
+    return new Intl.NumberFormat(intlLocale, {
+      style: 'currency',
+      currency: currency || 'EGP',
+      maximumFractionDigits: 0,
+    }).format(price);
+  } catch {
+    return `${price} ${currency}`;
+  }
 }
 
 export function formatDate(date: string, locale: string = 'en'): string {

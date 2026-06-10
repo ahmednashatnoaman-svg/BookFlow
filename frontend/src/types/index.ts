@@ -41,6 +41,7 @@ export interface BookListing {
   listing_type: ListingType;
   status: ListingStatus;
   price: number | null;
+  currency: string;
   description: string | null;
   images: string[];
   cover_image: string | null;

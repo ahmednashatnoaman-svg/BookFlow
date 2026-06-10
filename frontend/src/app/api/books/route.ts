@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 
   // Whitelist allowed fields for security
   const allowed = ['title', 'author', 'isbn', 'category_id', 'condition', 'listing_type', 'price',
-                   'description', 'images', 'cover_image', 'language', 'city', 'publisher', 'published_year'];
+                   'currency', 'description', 'images', 'cover_image', 'language', 'city', 'publisher', 'published_year'];
   const sanitized: Record<string, unknown> = {};
   for (const key of allowed) {
     if (body[key] !== undefined) sanitized[key] = body[key];

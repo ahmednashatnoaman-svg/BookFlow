@@ -6,14 +6,14 @@ import { Toaster } from 'sonner';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: { default: 'BookFlow — Peer-to-Peer Book Exchange', template: '%s | BookFlow' },
-  description: 'Discover, exchange, and sell used books in your community. AI-powered recommendations, audio summaries, and smart search.',
-  keywords: ['books', 'exchange', 'used books', 'book swap', 'كتب', 'تبادل الكتب'],
+  title: { default: 'BookFlow — Egypt AI-Powered Book Marketplace', template: '%s | BookFlow' },
+  description: "Egypt's AI-powered book marketplace. Buy, sell, and exchange used books with AI summaries, smart search, and audio previews.",
+  keywords: ['books', 'egypt', 'book exchange', 'used books', 'book marketplace', 'كتب', 'تبادل الكتب', 'مصر', 'سوق الكتب'],
   openGraph: {
     type: 'website',
     siteName: 'BookFlow',
-    title: 'BookFlow — Peer-to-Peer Book Exchange',
-    description: 'Discover, exchange, and sell used books in your community.',
+    title: 'BookFlow — Egypt AI-Powered Book Marketplace',
+    description: "Egypt's AI-powered book marketplace. Buy, sell, and exchange used books.",
   },
 };
 

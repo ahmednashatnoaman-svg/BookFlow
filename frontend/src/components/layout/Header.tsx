@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Menu, X, Plus, LogOut, LayoutDashboard, Shield, ChevronDown, Sparkles, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -13,19 +13,19 @@ import NotificationDrawer from '@/components/layout/NotificationDrawer';
 
 export default function Header() {
   const t = useTranslations('nav');
+  const locale = useLocale();
+  const isArabic = locale === 'ar';
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isArabic, setIsArabic] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
-    setIsArabic(document.documentElement.lang === 'ar');
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -151,9 +151,9 @@ export default function Header() {
                         {[
                           { href: '/dashboard', icon: LayoutDashboard, label: t('dashboard') },
                           { href: '/dashboard/listings', icon: BookOpen, label: t('myListings') },
-                          { href: '/dashboard/profile', icon: User, label: 'Profile' },
-                          { href: '/chat', icon: Sparkles, label: 'AI Search' },
-                          ...(user.role === 'admin' ? [{ href: '/admin', icon: Shield, label: 'Admin' }] : []),
+                          { href: '/dashboard/profile', icon: User, label: isArabic ? 'الملف الشخصي' : 'Profile' },
+                          { href: '/chat', icon: Sparkles, label: isArabic ? 'بحث الذكاء الاصطناعي' : 'AI Search' },
+                          ...(user.role === 'admin' ? [{ href: '/admin', icon: Shield, label: isArabic ? 'الإدارة' : 'Admin' }] : []),
                         ].map(item => (
                           <Link key={item.href} href={item.href}
                             className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-foreground hover:bg-muted/50 transition-colors"

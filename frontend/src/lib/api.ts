@@ -58,8 +58,8 @@ export const requestsApi = {
     fetcher<BookRequest>(`${BASE}/requests/${id}`, {
       method: 'PATCH', body: JSON.stringify({ status }),
     }),
-  incoming: () => fetcher<BookRequest[]>(`${BASE}/requests/incoming`),
-  outgoing: () => fetcher<BookRequest[]>(`${BASE}/requests/outgoing`),
+  incoming: () => fetcher<{ data: BookRequest[]; total: number }>(`${BASE}/requests?type=received`),
+  outgoing: () => fetcher<{ data: BookRequest[]; total: number }>(`${BASE}/requests?type=sent`),
 };
 
 // ── Wishlist ───────────────────────────────────────────────────────────────
